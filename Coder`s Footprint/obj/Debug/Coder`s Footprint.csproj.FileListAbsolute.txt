@@ -102,3 +102,59 @@ E:\Licenta NoCoding 2018\Coder`s Footprint\Coder`s Footprint\bin\Microsoft.AI.Se
 E:\Licenta NoCoding 2018\Coder`s Footprint\Coder`s Footprint\bin\Microsoft.AI.WindowsServer.xml
 E:\Licenta NoCoding 2018\Coder`s Footprint\Coder`s Footprint\bin\Microsoft.AI.Web.xml
 E:\Licenta NoCoding 2018\Coder`s Footprint\Coder`s Footprint\obj\Debug\Coder`s Footprint.csprojResolveAssemblyReference.cache
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\obj\Debug\Coder`s Footprint.csprojResolveAssemblyReference.cache
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\obj\Debug\Coder`s Footprint.csproj.CoreCompileInputs.cache
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\ApplicationInsights.config
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Coder`s Footprint.dll.config
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Coder`s Footprint.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Coder`s Footprint.pdb
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Antlr3.Runtime.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Microsoft.AI.Agent.Intercept.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Microsoft.AI.DependencyCollector.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Microsoft.AI.PerfCounterCollector.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Microsoft.AI.ServerTelemetryChannel.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Microsoft.AI.Web.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Microsoft.AI.WindowsServer.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Microsoft.ApplicationInsights.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Microsoft.IdentityModel.Logging.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Microsoft.IdentityModel.Tokens.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Microsoft.Web.Infrastructure.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Newtonsoft.Json.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.IdentityModel.Tokens.Jwt.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Net.Http.Formatting.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Web.Helpers.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Web.Http.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Web.Http.WebHost.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Web.Mvc.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Web.Optimization.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Web.Razor.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Web.WebPages.Deployment.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Web.WebPages.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Web.WebPages.Razor.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\WebDriver.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\WebGrease.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Microsoft.IdentityModel.Logging.xml
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Microsoft.IdentityModel.Tokens.xml
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Newtonsoft.Json.xml
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.IdentityModel.Tokens.Jwt.xml
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Net.Http.Formatting.xml
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Web.Helpers.xml
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Web.Http.xml
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Web.Http.WebHost.xml
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Web.Mvc.xml
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Web.Optimization.xml
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Web.Razor.xml
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Web.WebPages.xml
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Web.WebPages.Deployment.xml
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Web.WebPages.Razor.xml
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\WebDriver.xml
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Antlr3.Runtime.pdb
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Microsoft.ApplicationInsights.xml
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Microsoft.AI.DependencyCollector.xml
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Microsoft.AI.ServerTelemetryChannel.xml
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Microsoft.AI.WindowsServer.xml
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Microsoft.AI.Web.xml
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\obj\Debug\Coder`s Footprint.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\obj\Debug\Coder`s Footprint.pdb
