@@ -46,6 +46,7 @@ namespace Coder_s_Footprint.Controllers
             ChromeOptions option = new ChromeOptions();
             option.AddArgument("--headless");
             option.AddArgument("no-sandbox");
+            option.BinaryLocation = GetBinaryLocationofGoogleChrome();
             IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
 
             driver.Navigate().GoToUrl("https://tracker.bugcrowd.com/user/sign_up");
@@ -645,6 +646,15 @@ namespace Coder_s_Footprint.Controllers
             };
 
             return platformModel;
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public static string GetBinaryLocationofGoogleChrome()
+        {
+            var currentDirectory = HostingEnvironment.ApplicationPhysicalPath;
+            string chromeDriverDirectory = currentDirectory + "Resources//GoogleChromePortable//App//Chrome-bin//";
+
+            return chromeDriverDirectory;
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
