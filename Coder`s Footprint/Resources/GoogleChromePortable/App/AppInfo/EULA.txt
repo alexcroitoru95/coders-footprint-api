@@ -1,5 +1,3 @@
-This is a TEST version of Google Chrome Portable 64-bit. It will not work on Windows XP, Vista, or 32-bit Windows 7/8 machines. As a test, there may be some issues with the operation or portablization.
-
 Please note that you MUST sign into Google Chrome with your associated Google account in order to have a fully functional browser when used portably. Unlike other browsers, components of Google Chrome are locked to a given PC and will be lost if you move from PC to PC including extensions, extension settings and data, homepage and search settings, etc. This is by design of the Google Chrome team.
 
 Passwords are not portable by default but can be made portable using a configuration option within the launcher's INI file. They may be portable while signed into Google.

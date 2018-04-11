@@ -150,7 +150,7 @@
    },
    "session": {
       "restore_on_startup_migrated": true,
-      "startup_urls_migration_time": "13056341034243064"
+      "startup_urls_migration_time": "13135560802000000"
    },
    "tabs": {
       "use_compact_navigation_bar": false,
