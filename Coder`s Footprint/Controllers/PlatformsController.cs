@@ -652,7 +652,7 @@ namespace Coder_s_Footprint.Controllers
         public static string GetBinaryLocationofGoogleChrome()
         {
             var currentDirectory = HostingEnvironment.ApplicationPhysicalPath;
-            string chromeDriverDirectory = currentDirectory + "Resources//GoogleChromePortable//App//Chrome-bin//";
+            string chromeDriverDirectory = currentDirectory + "Resources//GoogleChromePortable64//App//Chrome-bin//";
 
             return chromeDriverDirectory;
         }
