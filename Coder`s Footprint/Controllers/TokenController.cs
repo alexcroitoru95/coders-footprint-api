@@ -10,6 +10,7 @@ namespace Coder_s_Footprint.Controllers
 {
     public class TokenController : ApiController
     {
+        [RequireHttps]
         [HttpPost]
         public IHttpActionResult Authenticate([FromBody] LoginRequest login)
         {
