@@ -12,6 +12,7 @@ using System.Threading;
 using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Description;
+using OpenQA.Selenium.PhantomJS;
 
 namespace Coder_s_Footprint.Controllers
 {
@@ -43,11 +44,13 @@ namespace Coder_s_Footprint.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, String.Format("Request Body Error! Empty key/value pair or wrong content type, please use x-www-form-urlencoded.")));
             }
 
-            ChromeOptions option = new ChromeOptions();
-            option.AddArgument("--headless");
-            option.AddArgument("no-sandbox");
-            option.BinaryLocation = GetBinaryLocationofGoogleChrome();
-            IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
+            //ChromeOptions option = new ChromeOptions();
+            //option.AddArgument("--headless");
+            //option.AddArgument("no-sandbox");
+            //option.BinaryLocation = GetBinaryLocationofGoogleChrome();
+            //IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
+
+            var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
 
             driver.Navigate().GoToUrl("https://tracker.bugcrowd.com/user/sign_up");
 
@@ -653,6 +656,15 @@ namespace Coder_s_Footprint.Controllers
         {
             var currentDirectory = HostingEnvironment.ApplicationPhysicalPath;
             string chromeDriverDirectory = currentDirectory + "Resources//GoogleChromePortable//App//Chrome-bin//";
+
+            return chromeDriverDirectory;
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public static string GetBinaryLocationofPhantomJS()
+        {
+            var currentDirectory = HostingEnvironment.ApplicationPhysicalPath;
+            string chromeDriverDirectory = currentDirectory + "Resources//PhantomJS Driver//";
 
             return chromeDriverDirectory;
         }

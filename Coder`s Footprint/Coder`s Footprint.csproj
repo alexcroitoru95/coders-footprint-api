@@ -289,6 +289,7 @@
     <Content Include="Resources\GoogleChromePortable\Other\Source\dialogsEx.dll" />
     <Content Include="Resources\GoogleChromePortable\Other\Source\GoogleChromePortable.jpg" />
     <Content Include="Resources\GoogleChromePortable\Other\Source\License.txt" />
+    <Content Include="Resources\PhantomJS Driver\phantomjs.exe" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
