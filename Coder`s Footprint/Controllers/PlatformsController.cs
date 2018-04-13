@@ -13,6 +13,7 @@ using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Description;
 using OpenQA.Selenium.PhantomJS;
+using OpenQA.Selenium.Firefox;
 
 namespace Coder_s_Footprint.Controllers
 {
@@ -104,10 +105,12 @@ namespace Coder_s_Footprint.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, String.Format("Request Body Error! Empty key/value pair or wrong content type, please use x-www-form-urlencoded.")));
             }
 
-            ChromeOptions option = new ChromeOptions();
-            option.AddArgument("--headless");
-            option.AddArgument("no-sandbox");
-            IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
+            //ChromeOptions option = new ChromeOptions();
+            //option.AddArgument("--headless");
+            //option.AddArgument("no-sandbox");
+            //IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
+
+            var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
 
             driver.Navigate().GoToUrl("https://signup.live.com/signup?wa=wsignin1.0&wtrealm=urn%3afederation%3aMicrosoftOnline&wctx=estsredirect%3d2%26estsrequest%3drQIIAbPSyigpKSi20tdPTE7OL80r0SvPzEvJLy9OrCotStVLzs_Vyy9Kz0wBsaLYgYJJmTk5SYyGRUJcAi8NHT40Gba57pHO3dXv_8dsFiNHTmYZWNMqRj1C5uoHlyYVJxdlFpRk5ucVX2BkfMHI2MXEYmhgbLyJiSXYMcDzBFPzSblbTIL-RemeKeHFbqkpqUWJINWPmHhDi1OL_PNyKkPys1PzJjHz5eSnZ-bFFxelxafl5JcDBYA2FCQml8SXZCZnp5bsYlYxMUpJNLdMMdI1SzQ21DUxNbLUTTQzN9Q1NE82MzQwMzI3T7Y8wLKB8wKLwC0W1tTE4kyjHyyMi1iBHk1Q_1ki7PPJo6VN--j0NV_fnWLVz9COCMwrNc_N1i71jnAKMi2pzMit9M_Rdklxc_JM9Un3Dw_RLijy9_Uo8bQ1tTLcxUlieAAA0&id=&cbcxt=azubill&lw=1&fl=easi2&bk=1468239878&uaid=f04031e931824586bc1b6dba8f4ffc36&cru=https%3a%2f%2flogin.live.com%2flogin.srf%3fwa%3dwsignin1.0%26wtrealm%3durn%253afederation%253aMicrosoftOnline%26wctx%3destsredirect%253d2%2526estsrequest%253drQIIAbPSyigpKSi20tdPTE7OL80r0SvPzEvJLy9OrCotStVLzs_Vyy9Kz0wBsaLYgYJJmTk5SYyGRUJcAi8NHT40Gba57pHO3dXv_8dsFiNHTmYZWNMqRj1C5uoHlyYVJxdlFpRk5ucVX2BkfMHI2MXEYmhgbLyJiSXYMcDzBFPzSblbTIL-RemeKeHFbqkpqUWJINWPmHhDi1OL_PNyKkPys1PzJjHz5eSnZ-bFFxelxafl5JcDBYA2FCQml8SXZCZnp5bsYlYxMUpJNLdMMdI1SzQ21DUxNbLUTTQzN9Q1NE82MzQwMzI3T7Y8wLKB8wKLwC0W1tTE4kyjHyyMi1iBHk1Q_1ki7PPJo6VN--j0NV_fnWLVz9COCMwrNc_N1i71jnAKMi2pzMit9M_Rdklxc_JM9Un3Dw_RLijy9_Uo8bQ1tTLcxUlieAAA0%26id%3d%26cbcxt%3dazubill%26lw%3d1%26fl%3deasi2%26uaid%3df04031e931824586bc1b6dba8f4ffc36%26lc%3d1033&mkt=EN-US&lc=1033&sl=1&lic=1");
 
@@ -162,10 +165,12 @@ namespace Coder_s_Footprint.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, String.Format("Request Body Error! Empty key/value pair or wrong content type, please use x-www-form-urlencoded.")));
             }
 
-            ChromeOptions option = new ChromeOptions();
-            option.AddArgument("--headless");
-            option.AddArgument("no-sandbox");
-            IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
+            //ChromeOptions option = new ChromeOptions();
+            //option.AddArgument("--headless");
+            //option.AddArgument("no-sandbox");
+            //IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
+
+            var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
 
             driver.Navigate().GoToUrl("https://openid.stackexchange.com/account/register");
 
@@ -225,10 +230,12 @@ namespace Coder_s_Footprint.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, String.Format("Request Body Error! Empty key/value pair or wrong content type, please use x-www-form-urlencoded.")));
             }
 
-            ChromeOptions option = new ChromeOptions();
-            option.AddArgument("--headless");
-            option.AddArgument("no-sandbox");
-            IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
+            //ChromeOptions option = new ChromeOptions();
+            //option.AddArgument("--headless");
+            //option.AddArgument("no-sandbox");
+            //IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
+
+            var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
 
             driver.Navigate().GoToUrl("https://appleid.apple.com/account?localang=en_US&appId=632&returnURL=https%3A%2F%2Fidmsa.apple.com%2FIDMSWebAuth%2Flogin.html%3FappIdKey%3D891bd3417a7776362562d2197f89480a8547b108fd934911bcbea0110d07f757%26path%3D%2Faccount%2F%26language%3DUS-EN%26baseURL%3Dhttps%3A%2F%2Fdeveloper.apple.com%2F%26rv%3D1");
 
@@ -285,10 +292,12 @@ namespace Coder_s_Footprint.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, String.Format("Request Body Error! Empty key/value pair or wrong content type, please use x-www-form-urlencoded.")));
             }
 
-            ChromeOptions option = new ChromeOptions();
-            option.AddArgument("--headless");
-            option.AddArgument("no-sandbox");
-            IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
+            //ChromeOptions option = new ChromeOptions();
+            //option.AddArgument("--headless");
+            //option.AddArgument("no-sandbox");
+            //IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
+
+            var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
 
             try
             {
@@ -354,10 +363,12 @@ namespace Coder_s_Footprint.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, String.Format("Request Body Error! Empty key/value pair or wrong content type, please use x-www-form-urlencoded.")));
             }
 
-            ChromeOptions option = new ChromeOptions();
-            option.AddArgument("--headless");
-            option.AddArgument("no-sandbox");
-            IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
+            //ChromeOptions option = new ChromeOptions();
+            //option.AddArgument("--headless");
+            //option.AddArgument("no-sandbox");
+            //IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
+
+            var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
 
             driver.Navigate().GoToUrl("https://forum.xda-developers.com/register.php");
 
@@ -415,10 +426,12 @@ namespace Coder_s_Footprint.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, String.Format("Request Body Error! Empty key/value pair or wrong content type, please use x-www-form-urlencoded.")));
             }
 
-            ChromeOptions option = new ChromeOptions();
-            option.AddArgument("--headless");
-            option.AddArgument("no-sandbox");
-            IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
+            //ChromeOptions option = new ChromeOptions();
+            //option.AddArgument("--headless");
+            //option.AddArgument("no-sandbox");
+            //IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
+
+            var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
 
             driver.Navigate().GoToUrl("https://passport.mobilenations.com/register-im");
 
@@ -478,10 +491,12 @@ namespace Coder_s_Footprint.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, String.Format("Request Body Error! Empty key/value pair or wrong content type, please use x-www-form-urlencoded.")));
             }
 
-            ChromeOptions option = new ChromeOptions();
-            option.AddArgument("--headless");
-            option.AddArgument("no-sandbox");
-            IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
+            //ChromeOptions option = new ChromeOptions();
+            //option.AddArgument("--headless");
+            //option.AddArgument("no-sandbox");
+            //IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
+
+            var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
 
             driver.Navigate().GoToUrl("https://accounts.google.com/SignUp?service=ahsid&continue=https%3A%2F%2Fdevelopers.google.com%2F%3Frefresh%3D1");
 
@@ -531,12 +546,12 @@ namespace Coder_s_Footprint.Controllers
             return PAC;
         }
 
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public static void TakeScreenshot(IWebDriver driver, String screenshotName)
-        {
-            Screenshot ss = ((ITakesScreenshot)driver).GetScreenshot();
-            ss.SaveAsFile("E:\\" + screenshotName + ".png", ScreenshotImageFormat.Png);
-        }
+        //[ApiExplorerSettings(IgnoreApi = true)]
+        //public static void TakeScreenshot(IWebDriver driver, String screenshotName)
+        //{
+        //    Screenshot ss = ((ITakesScreenshot)driver).GetScreenshot();
+        //    ss.SaveAsFile("E:\\" + screenshotName + ".png", ScreenshotImageFormat.Png);
+        //}
 
         [ApiExplorerSettings(IgnoreApi = true)]
         public static int GetPoints(int id)
@@ -651,32 +666,32 @@ namespace Coder_s_Footprint.Controllers
             return platformModel;
         }
 
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public static string GetBinaryLocationofGoogleChrome()
-        {
-            var currentDirectory = HostingEnvironment.ApplicationPhysicalPath;
-            string chromeDriverDirectory = currentDirectory + "Resources//GoogleChromePortable//App//Chrome-bin//";
+        //[ApiExplorerSettings(IgnoreApi = true)]
+        //public static string GetBinaryLocationofGoogleChrome()
+        //{
+        //    var currentDirectory = HostingEnvironment.ApplicationPhysicalPath;
+        //    string chromeDriverDirectory = currentDirectory + "Resources//GoogleChromePortable//App//Chrome-bin//";
 
-            return chromeDriverDirectory;
-        }
+        //    return chromeDriverDirectory;
+        //}
 
         [ApiExplorerSettings(IgnoreApi = true)]
         public static string GetBinaryLocationofPhantomJS()
         {
             var currentDirectory = HostingEnvironment.ApplicationPhysicalPath;
-            string chromeDriverDirectory = currentDirectory + "Resources//PhantomJS Driver//";
+            string phantomJSDriverDirectory = currentDirectory + "Resources//PhantomJS Driver//";
 
-            return chromeDriverDirectory;
+            return phantomJSDriverDirectory;
         }
 
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public static string GetChromeDriverDirectory()
-        {
-            var currentDirectory = HostingEnvironment.ApplicationPhysicalPath;
-            string chromeDriverDirectory = currentDirectory + "Resources//Chrome Driver//";
+        //[ApiExplorerSettings(IgnoreApi = true)]
+        //public static string GetChromeDriverDirectory()
+        //{
+        //    var currentDirectory = HostingEnvironment.ApplicationPhysicalPath;
+        //    string chromeDriverDirectory = currentDirectory + "Resources//Chrome Driver//";
 
-            return chromeDriverDirectory;
-        }
+        //    return chromeDriverDirectory;
+        //}
 
     }
 }
