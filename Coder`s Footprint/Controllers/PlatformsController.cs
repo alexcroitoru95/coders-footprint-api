@@ -13,7 +13,6 @@ using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Description;
 using OpenQA.Selenium.PhantomJS;
-using OpenQA.Selenium.Firefox;
 
 namespace Coder_s_Footprint.Controllers
 {
@@ -82,10 +81,10 @@ namespace Coder_s_Footprint.Controllers
             
             PlatformApiCollection PAC = new PlatformApiCollection
             {
-                Platforms = GetPlatformModel("BugCrowd", value, exists, TestedAt, GetPoints(5), timedOut)
+                Platforms = GetPlatformModel("BugCrowd", value, exists, TestedAt, GetPoints(exists, 5), timedOut)
             };
 
-            CalculateTotalPoints(exists, value, "BugCrowd", GetPoints(5));
+            CalculateTotalPoints(exists, value, "BugCrowd", GetPoints(exists, 5));
 
             return PAC;
         }
@@ -142,10 +141,10 @@ namespace Coder_s_Footprint.Controllers
 
             PlatformApiCollection PAC = new PlatformApiCollection
             {
-                Platforms = GetPlatformModel("Microsoft", value, exists, TestedAt, GetPoints(6), timedOut)
+                Platforms = GetPlatformModel("Microsoft", value, exists, TestedAt, GetPoints(exists, 6), timedOut)
             };
 
-            CalculateTotalPoints(exists, value, "Microsoft", GetPoints(6));
+            CalculateTotalPoints(exists, value, "Microsoft", GetPoints(exists, 6));
 
             return PAC;
         }
@@ -207,10 +206,10 @@ namespace Coder_s_Footprint.Controllers
 
             PlatformApiCollection PAC = new PlatformApiCollection
             {
-                Platforms = GetPlatformModel("StackOverflow", value, exists, TestedAt, GetPoints(2), timedOut)
+                Platforms = GetPlatformModel("StackOverflow", value, exists, TestedAt, GetPoints(exists, 2), timedOut)
             };
 
-            CalculateTotalPoints(exists, value, "Stack Overflow", GetPoints(2));
+            CalculateTotalPoints(exists, value, "Stack Overflow", GetPoints(exists, 2));
 
             return PAC;
         }
@@ -272,7 +271,7 @@ namespace Coder_s_Footprint.Controllers
                 Platforms = GetPlatformModel("Apple Developer", value, exists, TestedAt, 5, timedOut)
             };
 
-            //CalculateTotalPoints(exists, value, "Apple Developer", GetPoints(3));
+            //CalculateTotalPoints(exists, value, "Apple Developer", GetPoints(exists, 3));
 
             return PAC;
         }
@@ -340,10 +339,10 @@ namespace Coder_s_Footprint.Controllers
 
             PlatformApiCollection PAC = new PlatformApiCollection
             {
-                Platforms = GetPlatformModel("GitHub", value, exists, TestedAt, GetPoints(1), timedOut)
+                Platforms = GetPlatformModel("GitHub", value, exists, TestedAt, GetPoints(exists, 1), timedOut)
             };
 
-            CalculateTotalPoints(exists, value, "GitHub", GetPoints(1));
+            CalculateTotalPoints(exists, value, "GitHub", GetPoints(exists, 1));
 
             return PAC;
         }
@@ -403,10 +402,10 @@ namespace Coder_s_Footprint.Controllers
 
             PlatformApiCollection PAC = new PlatformApiCollection
             {
-                Platforms = GetPlatformModel("XDA Developer", value, exists, TestedAt, GetPoints(3), timedOut)
+                Platforms = GetPlatformModel("XDA Developer", value, exists, TestedAt, GetPoints(exists, 3), timedOut)
             };
 
-            CalculateTotalPoints(exists, value, "XDA Developer", GetPoints(3));
+            CalculateTotalPoints(exists, value, "XDA Developer", GetPoints(exists, 3));
 
             return PAC;
         }
@@ -468,10 +467,10 @@ namespace Coder_s_Footprint.Controllers
 
             PlatformApiCollection PAC = new PlatformApiCollection
             {
-                Platforms = GetPlatformModel("iMore Forums", value, exists, TestedAt, GetPoints(4), timedOut)
+                Platforms = GetPlatformModel("iMore Forums", value, exists, TestedAt, GetPoints(exists, 4), timedOut)
             };
 
-            CalculateTotalPoints(exists, value, "iMore Forums", GetPoints(4));
+            CalculateTotalPoints(exists, value, "iMore Forums", GetPoints(exists, 4));
 
             return PAC;
         }
@@ -538,10 +537,10 @@ namespace Coder_s_Footprint.Controllers
 
             PlatformApiCollection PAC = new PlatformApiCollection
             {
-                Platforms = GetPlatformModel("Google", value, exists, TestedAt, GetPoints(7), timedOut)
+                Platforms = GetPlatformModel("Google", value, exists, TestedAt, GetPoints(exists, 7), timedOut)
             };
 
-            CalculateTotalPoints(exists, value, "Google", GetPoints(7));
+            CalculateTotalPoints(exists, value, "Google", GetPoints(exists, 7));
 
             return PAC;
         }
@@ -554,31 +553,38 @@ namespace Coder_s_Footprint.Controllers
         //}
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public static int GetPoints(int id)
+        public static int GetPoints(bool exists, int id)
         {
             int points = 0;
 
-            string connectionString = ConfigurationManager.ConnectionStrings["DB"].ConnectionString.ToString();
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            if(exists == false)
             {
-                SqlCommand command = new SqlCommand("SELECT * FROM dbo.PlatformPoints WHERE Id=@id;")
-                {
-                    Connection = connection
-                };
-                command.Parameters.AddWithValue("@id", id);
-                connection.Open();
+                return points;
+            }
+            else
+            {
+                string connectionString = ConfigurationManager.ConnectionStrings["DB"].ConnectionString.ToString();
 
-                using (SqlDataReader sqlReader = command.ExecuteReader())
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    while (sqlReader.Read())
+                    SqlCommand command = new SqlCommand("SELECT * FROM dbo.PlatformPoints WHERE Id=@id;")
                     {
-                        points = sqlReader.GetInt32(2);
-                    }
-                }
-            };
+                        Connection = connection
+                    };
+                    command.Parameters.AddWithValue("@id", id);
+                    connection.Open();
 
-            return points;
+                    using (SqlDataReader sqlReader = command.ExecuteReader())
+                    {
+                        while (sqlReader.Read())
+                        {
+                            points = sqlReader.GetInt32(2);
+                        }
+                    }
+                };
+
+                return points;
+            }
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
