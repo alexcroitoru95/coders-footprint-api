@@ -13,6 +13,7 @@ using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Description;
 using OpenQA.Selenium.PhantomJS;
+using System.Drawing;
 
 namespace Coder_s_Footprint.Controllers
 {
@@ -297,15 +298,18 @@ namespace Coder_s_Footprint.Controllers
             //IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
 
             var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
+            driver.Manage().Window.Size = new Size(1920, 1080);
 
             try
             {
-               driver.Navigate().GoToUrl("https://github.com/join");
+               driver.Navigate().GoToUrl("https://github.com/join?source=header-home");
 
-               Thread.Sleep(3000);
+               Thread.Sleep(6000);
 
-               //driver.FindElement(By.CssSelector("#user_login")).SendKeys("testsoftstate");
-               driver.FindElement(By.CssSelector("#user_email")).SendKeys(value);
+                TakeScreenshot(driver, "github 1");
+
+                //driver.FindElement(By.CssSelector("#user_login")).SendKeys("testsoftstate");
+                driver.FindElement(By.CssSelector("#user_email")).SendKeys(value);
 
                //driver.FindElement(By.CssSelector("#user_password")).SendKeys("TestSoftState@01)");
                //TakeScreenshot(driver, "github 1");
@@ -314,7 +318,7 @@ namespace Coder_s_Footprint.Controllers
 
                Thread.Sleep(1000);
                            
-               var error = driver.FindElement(By.CssSelector("#signup-form > dl.form-group.errored > dd.error"));
+               var error = driver.FindElement(By.CssSelector("#signup-form > auto-check:nth-child(5) > dl > dd.error"));
 
                if (error.Text.Contains("Email is invalid or already taken"))
                {
@@ -443,7 +447,7 @@ namespace Coder_s_Footprint.Controllers
             {
                 //TakeScreenshot(driver, "imore");
 
-                var error = driver.FindElement(By.CssSelector("#registrationForm > div > div:nth-child(5) > div > div"));
+                var error = driver.FindElement(By.XPath("//*[@id=registrationForm']/div/div[3]/div/div"));
 
                 if (error.Text.Contains("Sorry, this email is already registered."))
                 {
@@ -545,12 +549,12 @@ namespace Coder_s_Footprint.Controllers
             return PAC;
         }
 
-        //[ApiExplorerSettings(IgnoreApi = true)]
-        //public static void TakeScreenshot(IWebDriver driver, String screenshotName)
-        //{
-        //    Screenshot ss = ((ITakesScreenshot)driver).GetScreenshot();
-        //    ss.SaveAsFile("E:\\" + screenshotName + ".png", ScreenshotImageFormat.Png);
-        //}
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public static void TakeScreenshot(IWebDriver driver, String screenshotName)
+        {
+            Screenshot ss = ((ITakesScreenshot)driver).GetScreenshot();
+            ss.SaveAsFile("E:\\" + screenshotName + ".png", ScreenshotImageFormat.Png);
+        }
 
         [ApiExplorerSettings(IgnoreApi = true)]
         public static int GetPoints(bool exists, int id)
