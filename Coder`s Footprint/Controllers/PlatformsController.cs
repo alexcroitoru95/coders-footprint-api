@@ -1,6 +1,5 @@
 ﻿using Coder_s_Footprint.Models;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -446,8 +445,7 @@ namespace Coder_s_Footprint.Controllers
             try
             {
                 //TakeScreenshot(driver, "imore");
-
-                var error = driver.FindElement(By.XPath("//*[@id=registrationForm']/div/div[3]/div/div"));
+                var error = driver.FindElement(By.XPath("//*[@id='registrationForm']/div/div[3]/div/div"));
 
                 if (error.Text.Contains("Sorry, this email is already registered."))
                 {
