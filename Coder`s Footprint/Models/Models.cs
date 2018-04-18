@@ -66,4 +66,32 @@ namespace Coder_s_Footprint.Models
         public string TestedAt { get; set; }
         public int TotalPoints { get; set; }
     }
+
+    public class GitHubAPIRequestModel
+    {
+        public string cUrlSearchUserByEmail = "https://api.github.com/search/users?q=";
+        public string cUrlGetRepositories = "https://api.github.com/users/";
+        public string cUrlGetFollowers = "https://api.github.com/users/";
+        public string cUrlGetOrganizations = "https://api.github.com/users/";
+        public string cUrlGetSubscriptions = "https://api.github.com/users/";
+        public string OAuthApplicationClient_Id = "ba7cd06f283f82df0bde";
+        public string OAuthApplicationClient_Secret = "dbe777200c04b36a17a885a2e8961af359a1bcb1";
+    }
+
+    public class GitHubAPIUserRepository
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class GitHubAPIUserProfile
+    {
+        public string Username { get; set; }
+        public int Organizations { get; set; }
+        public int Followers { get; set; }
+        public int Subscriptions { get; set; }
+        public int TotalRepositories { get; set; }
+        public List<GitHubAPIUserRepository> Repositories { get; set; }
+        public string Tested_At { get; set; }
+    }
 }
