@@ -158,3 +158,9 @@ E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Micros
 E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\Microsoft.AI.Web.xml
 E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\obj\Debug\Coder`s Footprint.dll
 E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\obj\Debug\Coder`s Footprint.pdb
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\jint.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Net.Http.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Security.Cryptography.Algorithms.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Security.Cryptography.Encoding.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Security.Cryptography.Primitives.dll
+E:\Licenta NoCoding 2018\Coder's Footprint Git Repo\Coder`s Footprint\bin\System.Security.Cryptography.X509Certificates.dll

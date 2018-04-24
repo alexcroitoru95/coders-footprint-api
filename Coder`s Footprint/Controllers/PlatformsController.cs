@@ -13,6 +13,8 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using OpenQA.Selenium.PhantomJS;
 using System.Drawing;
+using System.Linq;
+using OpenQA.Selenium.Chrome;
 
 namespace Coder_s_Footprint.Controllers
 {
@@ -22,6 +24,7 @@ namespace Coder_s_Footprint.Controllers
     {
         private static List<int> ListOfPoints;
         private static List<string> ListOfPlatformsTested;
+        private static Random random = new Random();
 
         static PlatformsController()
         {
@@ -229,29 +232,31 @@ namespace Coder_s_Footprint.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, String.Format("Request Body Error! Empty key/value pair or wrong content type, please use x-www-form-urlencoded.")));
             }
 
-            //ChromeOptions option = new ChromeOptions();
-            //option.AddArgument("--headless");
-            //option.AddArgument("no-sandbox");
-            //IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
+            ChromeOptions option = new ChromeOptions();
+            option.AddArgument("--headless");
+            option.AddArgument("no-sandbox");
+            option.BinaryLocation = GetBinaryLocationofGoogleChrome();
+            IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
 
-            var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
+            //var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
 
-            driver.Navigate().GoToUrl("https://appleid.apple.com/account?localang=en_US&appId=632&returnURL=https%3A%2F%2Fidmsa.apple.com%2FIDMSWebAuth%2Flogin.html%3FappIdKey%3D891bd3417a7776362562d2197f89480a8547b108fd934911bcbea0110d07f757%26path%3D%2Faccount%2F%26language%3DUS-EN%26baseURL%3Dhttps%3A%2F%2Fdeveloper.apple.com%2F%26rv%3D1");
+            driver.Navigate().GoToUrl("https://appleid.apple.com/account#!&page=create");
 
-            driver.FindElement(By.XPath("//*[input[@type='email']")).SendKeys(value);
+            driver.FindElement(By.CssSelector("input[type=email]")).SendKeys(value);
             driver.FindElement(By.Id("password")).Click();
+
             Thread.Sleep(3000);
 
             try
             {
-                var error = driver.FindElement(By.Id("errorInputId"));
+                var error = driver.FindElement(By.CssSelector("span.form-message"));
 
                 if ((error.Text.Contains("This email address is not available. Choose a different address.")))
                 {
                     driver.Quit();
                     exists = true;
                 }
-                else if ((error.Text.Contains("No account with this email found")))
+                else
                 {
                     driver.Quit();
                     exists = false;
@@ -266,6 +271,7 @@ namespace Coder_s_Footprint.Controllers
 
                 driver.Quit();
             }
+
             PlatformApiCollection PAC = new PlatformApiCollection
             {
                 Platforms = GetPlatformModel("Apple Developer", value, exists, TestedAt, 5, timedOut)
@@ -414,8 +420,8 @@ namespace Coder_s_Footprint.Controllers
         }
 
         [AcceptVerbs("POST")]
-        [Route("iMore/")]
-        public PlatformApiCollection IMoreChecker([FromBody] EmailRequestModel emailRequest)
+        [Route("Codecademy/")]
+        public PlatformApiCollection Codecademy([FromBody] EmailRequestModel emailRequest)
         {
             string value = emailRequest.Email;
 
@@ -428,26 +434,28 @@ namespace Coder_s_Footprint.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, String.Format("Request Body Error! Empty key/value pair or wrong content type, please use x-www-form-urlencoded.")));
             }
 
-            //ChromeOptions option = new ChromeOptions();
-            //option.AddArgument("--headless");
-            //option.AddArgument("no-sandbox");
-            //IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
+            ChromeOptions option = new ChromeOptions();
+            option.AddArgument("--headless");
+            option.AddArgument("no-sandbox");
+            IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
 
-            var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
+            //var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
 
-            driver.Navigate().GoToUrl("https://passport.mobilenations.com/register-im");
+            driver.Navigate().GoToUrl("https://www.codecademy.com/");
 
-            driver.FindElement(By.CssSelector("#registrationForm > div > div:nth-child(5) > input")).SendKeys(value);
-            driver.FindElement(By.CssSelector("#password")).Click();
+            TakeScreenshot(driver, "udemy");
 
-            Thread.Sleep(3000);
+            driver.FindElement(By.Name("user[username]")).SendKeys(RandomString(15));
+            driver.FindElement(By.Name("user[email]")).SendKeys(value);
+            driver.FindElement(By.Name("user[password]")).SendKeys(RandomString(15));
+
+            Thread.Sleep(500);
 
             try
             {
-                //TakeScreenshot(driver, "imore");
-                var error = driver.FindElement(By.XPath("//*[@id='registrationForm']/div/div[3]/div/div"));
+                var error = driver.FindElement(By.CssSelector("ul[class^='fieldErrors']"));
 
-                if (error.Text.Contains("Sorry, this email is already registered."))
+                if (error.Text.Contains("Email is already taken"))
                 {
                     driver.Quit();
                     exists = true;
@@ -469,10 +477,10 @@ namespace Coder_s_Footprint.Controllers
 
             PlatformApiCollection PAC = new PlatformApiCollection
             {
-                Platforms = GetPlatformModel("iMore Forums", value, exists, TestedAt, GetPoints(exists, 4), timedOut)
+                Platforms = GetPlatformModel("Codecademy", value, exists, TestedAt, GetPoints(exists, 4), timedOut)
             };
 
-            CalculateTotalPoints(exists, value, "iMore Forums", GetPoints(exists, 4));
+            CalculateTotalPoints(exists, value, "Codecademy", GetPoints(exists, 4));
 
             return PAC;
         }
@@ -492,36 +500,40 @@ namespace Coder_s_Footprint.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, String.Format("Request Body Error! Empty key/value pair or wrong content type, please use x-www-form-urlencoded.")));
             }
 
-            //ChromeOptions option = new ChromeOptions();
-            //option.AddArgument("--headless");
-            //option.AddArgument("no-sandbox");
-            //IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
+            ChromeOptions option = new ChromeOptions();
+            option.AddArgument("--headless");
+            option.AddArgument("no-sandbox");
+            IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
 
-            var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
+            //var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
 
-            driver.Navigate().GoToUrl("https://accounts.google.com/SignUp?service=ahsid&continue=https%3A%2F%2Fdevelopers.google.com%2F%3Frefresh%3D1");
+            driver.Navigate().GoToUrl("https://accounts.google.com/signup/v2/webcreateaccount?service=ahsid&continue=https%3A%2F%2Fdevelopers.google.com%2F%3Frefresh%3D1&flowName=GlifWebSignIn&flowEntry=SignUp&hl=en");
 
-            driver.FindElement(By.CssSelector("#GmailAddress")).SendKeys(value);
-            driver.FindElement(By.CssSelector("#Passwd")).Click();
+            Thread.Sleep(500);
 
-            Thread.Sleep(3000);
+            driver.FindElement(By.CssSelector("#firstName")).SendKeys(RandomString(15));
+            driver.FindElement(By.CssSelector("#lastName")).SendKeys(RandomString(15));
+            driver.FindElement(By.CssSelector("#username")).SendKeys(value);
+            driver.FindElement(By.Name("Passwd")).SendKeys("test123test");
+            driver.FindElement(By.Name("ConfirmPasswd")).SendKeys("test123test");
+            driver.FindElement(By.CssSelector("#accountDetailsNext > content > span")).Click();
+
+            Thread.Sleep(500);
 
             try
             {
                 //TakeScreenshot(driver, "gmail");
 
-                var error = driver.FindElement(By.CssSelector("#errormsg_0_GmailAddress"));
+                TakeScreenshot(driver, "google");
 
-               if(error.Text.Contains("Someone already has that username."))
+                var error = driver.FindElement(By.CssSelector("#view_container > form > div.mbekbe.bxPAYd > div > div.RCum0c > div:nth-child(2) > div.fQxwff > div > div.LXRPh > div.dEOOab.RxsGPe"));
+
+               if(error.Text.Contains("That username is taken. Try another."))
                 
                 {
                     driver.Quit();
                     exists = true;
                 }
-
-                //if (error.Text.Contains("Acest nume de utilizator nu este disponibil. Încercați altul.") || error.Text.Contains("That username is taken. Try another.")
-                //    || error.Text.Contains("Acest nume de utilizator aparține altui cont.")
-                //    || error.Text.Contains("Someone already has that username."))
             }
             catch (Exception ex)
             {
@@ -545,6 +557,14 @@ namespace Coder_s_Footprint.Controllers
             CalculateTotalPoints(exists, value, "Google", GetPoints(exists, 7));
 
             return PAC;
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
@@ -674,15 +694,6 @@ namespace Coder_s_Footprint.Controllers
             return platformModel;
         }
 
-        //[ApiExplorerSettings(IgnoreApi = true)]
-        //public static string GetBinaryLocationofGoogleChrome()
-        //{
-        //    var currentDirectory = HostingEnvironment.ApplicationPhysicalPath;
-        //    string chromeDriverDirectory = currentDirectory + "Resources//GoogleChromePortable//App//Chrome-bin//";
-
-        //    return chromeDriverDirectory;
-        //}
-
         [ApiExplorerSettings(IgnoreApi = true)]
         public static string GetBinaryLocationofPhantomJS()
         {
@@ -692,14 +703,23 @@ namespace Coder_s_Footprint.Controllers
             return phantomJSDriverDirectory;
         }
 
-        //[ApiExplorerSettings(IgnoreApi = true)]
-        //public static string GetChromeDriverDirectory()
-        //{
-        //    var currentDirectory = HostingEnvironment.ApplicationPhysicalPath;
-        //    string chromeDriverDirectory = currentDirectory + "Resources//Chrome Driver//";
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public static string GetBinaryLocationofGoogleChrome()
+        {
+            var currentDirectory = HostingEnvironment.ApplicationPhysicalPath;
+            string chromeDriverDirectory = currentDirectory + "Resources//GoogleChromePortable//chrome.exe";
 
-        //    return chromeDriverDirectory;
-        //}
+            return chromeDriverDirectory;
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public static string GetChromeDriverDirectory()
+        {
+            var currentDirectory = HostingEnvironment.ApplicationPhysicalPath;
+            string chromeDriverDirectory = currentDirectory + "Resources//Chrome Driver//";
+
+            return chromeDriverDirectory;
+        }
 
     }
 }

@@ -19,6 +19,11 @@ namespace Coder_s_Footprint.Models
         public string Email { get; set; } 
     }
 
+    public class DisplayNameRequestModel
+    {
+        public string DisplayName { get; set; }
+    }
+
     public class EmailRequestCode
     {
         public EmailRequestCode()
@@ -78,7 +83,15 @@ namespace Coder_s_Footprint.Models
         public string OAuthApplicationClient_Secret = "dbe777200c04b36a17a885a2e8961af359a1bcb1";
     }
 
-    public class GitHubAPIUserRepository
+    public class StackExchangeAPIRequestModel
+    {
+        public string cUrlGetUsernameId = "https://api.stackexchange.com/2.2/users?inname=";
+        public string cUrlGetQuestions = "https://api.stackexchange.com/2.2/users/";
+        public string cUrlGetAnswers = "https://api.stackexchange.com/2.2/users/";
+        public string cUrlGetComments = "https://api.stackexchange.com/2.2/users/";
+    }
+
+        public class GitHubAPIUserRepository
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -92,6 +105,16 @@ namespace Coder_s_Footprint.Models
         public int Subscriptions { get; set; }
         public int TotalRepositories { get; set; }
         public List<GitHubAPIUserRepository> Repositories { get; set; }
+        public string Tested_At { get; set; }
+    }
+
+    public class StackExchangeAPIUserProfile
+    {
+        public string DisplayName { get; set; }
+        public int UserId { get; set; }
+        public int Questions { get; set; }
+        public int Answers { get; set; }
+        public int Comments { get; set; }
         public string Tested_At { get; set; }
     }
 }
