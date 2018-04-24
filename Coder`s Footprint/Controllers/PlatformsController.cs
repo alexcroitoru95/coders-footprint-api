@@ -503,6 +503,7 @@ namespace Coder_s_Footprint.Controllers
             ChromeOptions option = new ChromeOptions();
             option.AddArgument("--headless");
             option.AddArgument("no-sandbox");
+            option.BinaryLocation = GetBinaryLocationofGoogleChrome();
             IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
 
             //var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
@@ -707,7 +708,7 @@ namespace Coder_s_Footprint.Controllers
         public static string GetBinaryLocationofGoogleChrome()
         {
             var currentDirectory = HostingEnvironment.ApplicationPhysicalPath;
-            string chromeDriverDirectory = currentDirectory + "Resources//GoogleChromePortable//chrome.exe";
+            string chromeDriverDirectory = currentDirectory + "Resources\\GoogleChromePortable\\App\\Chrome-bin\\chrome.exe";
 
             return chromeDriverDirectory;
         }
