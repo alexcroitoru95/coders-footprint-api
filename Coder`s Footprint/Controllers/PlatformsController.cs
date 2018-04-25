@@ -235,7 +235,6 @@ namespace Coder_s_Footprint.Controllers
             ChromeOptions option = new ChromeOptions();
             option.AddArgument("--headless");
             option.AddArgument("no-sandbox");
-            option.AddAdditionalCapability("chrome.binary", GetBinaryLocationofGoogleChrome());
             option.BinaryLocation = GetBinaryLocationofGoogleChrome();
             IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
             
@@ -246,7 +245,7 @@ namespace Coder_s_Footprint.Controllers
             driver.FindElement(By.CssSelector("input[type=email]")).SendKeys(value);
             driver.FindElement(By.Id("password")).Click();
 
-            Thread.Sleep(3000);
+            Thread.Sleep(500);
 
             try
             {
@@ -709,7 +708,7 @@ namespace Coder_s_Footprint.Controllers
         public static string GetBinaryLocationofGoogleChrome()
         {
             var currentDirectory = HostingEnvironment.ApplicationPhysicalPath;
-            string chromeDriverDirectory = currentDirectory + @"Resources\GoogleChromePortable\chrome.exe";
+            string chromeDriverDirectory = currentDirectory + @"Resources\Chromium\chrome.exe";
 
             return chromeDriverDirectory;
         }
