@@ -717,7 +717,7 @@ namespace Coder_s_Footprint.Controllers
         public static string GetChromeDriverDirectory()
         {
             var currentDirectory = HostingEnvironment.ApplicationPhysicalPath;
-            string chromeDriverDirectory = currentDirectory + "Resources\\Chrome Driver\\chromedriver.exe";
+            string chromeDriverDirectory = currentDirectory + "Resources\\Chrome Driver\\";
 
             return chromeDriverDirectory;
         }
