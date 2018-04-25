@@ -235,9 +235,10 @@ namespace Coder_s_Footprint.Controllers
             ChromeOptions option = new ChromeOptions();
             option.AddArgument("--headless");
             option.AddArgument("no-sandbox");
+            option.AddAdditionalCapability("chrome.binary", GetBinaryLocationofGoogleChrome());
             option.BinaryLocation = GetBinaryLocationofGoogleChrome();
             IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
-
+            
             //var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
 
             driver.Navigate().GoToUrl("https://appleid.apple.com/account#!&page=create");
@@ -717,7 +718,7 @@ namespace Coder_s_Footprint.Controllers
         public static string GetChromeDriverDirectory()
         {
             var currentDirectory = HostingEnvironment.ApplicationPhysicalPath;
-            string chromeDriverDirectory = currentDirectory + "Resources\\Chrome Driver\\";
+            string chromeDriverDirectory = currentDirectory + @"Resources\Chrome Driver\";
 
             return chromeDriverDirectory;
         }
