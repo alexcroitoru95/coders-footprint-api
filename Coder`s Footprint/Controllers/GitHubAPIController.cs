@@ -1,18 +1,12 @@
 ﻿using Coder_s_Footprint.Models;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data.SqlClient;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Threading;
-using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Newtonsoft.Json.Linq;
-using System.Linq;
 
 namespace Coder_s_Footprint.Controllers
 {
@@ -38,33 +32,57 @@ namespace Coder_s_Footprint.Controllers
 
             string username = GetUsername(cURL);
 
-            List<GitHubAPIUserRepository> gitHubAPIUserRepositoriesCollection = GetUserRepositories(username);
-
-            int total_number_of_repositories = gitHubAPIUserRepositoriesCollection.Count;
-
-            int followers = GetFollowers(username);
-
-            int subscriptions = GetSubscriptions(username);
-
-            int organizations = GetOrganizations(username);
-
-            GitHubAPIUserProfile gitHubAPIUserProfile = new GitHubAPIUserProfile
+            if(username == "0")
             {
-                Username = username,
-                Organizations = organizations,
-                Followers = followers,
-                Subscriptions = subscriptions,
-                TotalRepositories = total_number_of_repositories,
-                Repositories = gitHubAPIUserRepositoriesCollection,
-                Tested_At = TestedAt.ToString("dd/MM/yyyy HH:mm")
-            };
+                username = "none";
 
-            return gitHubAPIUserProfile;
+                List<GitHubAPIUserRepository> gitHubAPINoUserRepositories = new List<GitHubAPIUserRepository>();
+                gitHubAPINoUserRepositories.Clear();
+
+                GitHubAPIUserProfile gitHubAPINoUserProfile = new GitHubAPIUserProfile
+                {
+                    Username = username,
+                    Organizations = 0,
+                    Followers = 0,
+                    Subscriptions = 0,
+                    TotalRepositories = 0,
+                    Repositories = gitHubAPINoUserRepositories,
+                    Tested_At = TestedAt.ToString("dd/MM/yyyy HH:mm")
+                };
+
+                return gitHubAPINoUserProfile;
+            }
+            else
+            {
+                List<GitHubAPIUserRepository> gitHubAPIUserRepositoriesCollection = GetUserRepositories(username);
+
+                int total_number_of_repositories = gitHubAPIUserRepositoriesCollection.Count;
+
+                int followers = GetFollowers(username);
+
+                int subscriptions = GetSubscriptions(username);
+
+                int organizations = GetOrganizations(username);
+
+                GitHubAPIUserProfile gitHubAPIUserProfile = new GitHubAPIUserProfile
+                {
+                    Username = username,
+                    Organizations = organizations,
+                    Followers = followers,
+                    Subscriptions = subscriptions,
+                    TotalRepositories = total_number_of_repositories,
+                    Repositories = gitHubAPIUserRepositoriesCollection,
+                    Tested_At = TestedAt.ToString("dd/MM/yyyy HH:mm")
+                };
+
+                return gitHubAPIUserProfile;
+            }
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
         public static string GetUsername(string cURL)
         {
+            string user_exists = string.Empty;
             string username = string.Empty;
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(cURL);
@@ -76,6 +94,14 @@ namespace Coder_s_Footprint.Controllers
             using (StreamReader reader = new StreamReader(stream))
             {
                 JToken json_response_object = JObject.Parse(reader.ReadToEnd());
+
+                user_exists = (string)json_response_object.First;
+
+                if(user_exists == "0")
+                {
+                    return user_exists;
+                }
+
                 username = (string)json_response_object.SelectToken("items[0].login");
 
                 return username;

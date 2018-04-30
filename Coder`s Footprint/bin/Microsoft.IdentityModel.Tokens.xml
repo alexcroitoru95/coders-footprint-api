@@ -112,6 +112,14 @@
             <exception cref="T:System.InvalidOperationException">If the internal <see cref="T:Microsoft.IdentityModel.Tokens.AsymmetricSignatureProvider"/> is null. This can occur if the constructor parameter 'willBeUsedforSigning' was not 'true'.</exception>
             <exception cref="T:System.InvalidOperationException">If the internal <see cref="T:System.Security.Cryptography.HashAlgorithm"/> is null. This can occur if a derived type deletes it or does not create it.</exception>
         </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.AsymmetricSignatureProvider.ValidateAsymmetricSecurityKeySize(Microsoft.IdentityModel.Tokens.SecurityKey,System.String,System.Boolean)">
+            <summary>
+            Validates that the asymmetric key size is more than the allowed minimum
+            </summary>
+            <param name="key">The asymmetric key to validate</param>
+            <param name="algorithm">Algorithm for which this key will be used</param>
+            <param name="willCreateSignatures">Whether they key will be used for creating signatures</param>
+        </member>
         <member name="M:Microsoft.IdentityModel.Tokens.AsymmetricSignatureProvider.Verify(System.Byte[],System.Byte[])">
             <summary>
             Verifies that a signature over the' input' matches the signature.
@@ -126,14 +134,6 @@
             <exception cref="T:System.ObjectDisposedException">If <see cref="M:Microsoft.IdentityModel.Tokens.AsymmetricSignatureProvider.Dispose(System.Boolean)"/> has been called. </exception>
             <exception cref="T:System.InvalidOperationException">If the internal <see cref="T:Microsoft.IdentityModel.Tokens.AsymmetricSignatureProvider"/> is null. This can occur if a derived type does not call the base constructor.</exception>
             <exception cref="T:System.InvalidOperationException">If the internal <see cref="T:System.Security.Cryptography.HashAlgorithm"/> is null. This can occur if a derived type deletes it or does not create it.</exception>
-        </member>
-        <member name="M:Microsoft.IdentityModel.Tokens.AsymmetricSignatureProvider.ValidateAsymmetricSecurityKeySize(Microsoft.IdentityModel.Tokens.SecurityKey,System.String,System.Boolean)">
-            <summary>
-            Validates that the asymmetric key size is more than the allowed minimum
-            </summary>
-            <param name="key">The asymmetric key to validate</param>
-            <param name="algorithm">Algorithm for which this key will be used</param>
-            <param name="willCreateSignatures">Whether they key will be used for creating signatures</param>
         </member>
         <member name="M:Microsoft.IdentityModel.Tokens.AsymmetricSignatureProvider.Dispose(System.Boolean)">
             <summary>
@@ -191,6 +191,52 @@
             <param name="arg">string to decode.</param>
             <returns>UTF8 string.</returns>
         </member>
+        <member name="T:Microsoft.IdentityModel.Tokens.CryptoProviderCache">
+            <summary>
+            Definition of cache for crypto providers
+            </summary>
+        </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.CryptoProviderCache.GetCacheKey(Microsoft.IdentityModel.Tokens.SignatureProvider)">
+            <summary>
+            Returns the cache key to use when looking up an entry into the cache for a <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider" />
+            </summary>
+            <param name="signatureProvider">the <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> to create the key for.</param>
+            <returns>the cache key to use for finding a <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/>.</returns>
+        </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.CryptoProviderCache.GetCacheKey(Microsoft.IdentityModel.Tokens.SecurityKey,System.String,System.String)">
+            <summary>
+            Returns the 'key' that will be used to find a crypto provider in this cache.
+            </summary>
+            <param name="securityKey">the key that is used to by the crypto provider.</param>
+            <param name="algorithm">the algorithm that is used by the crypto provider.</param>
+            <param name="typeofProvider">the typeof the crypto provider obtained by calling object.GetType().</param>
+            <returns>the cache key to use for finding a crypto provider.</returns>
+        </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.CryptoProviderCache.TryAdd(Microsoft.IdentityModel.Tokens.SignatureProvider)">
+            <summary>
+            Trys to adds a <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> to this cache.
+            </summary>
+            <param name="signatureProvider"><see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> to cache.</param>
+            <returns>true if the <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> was added, false if the cache already contained the <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/></returns>
+        </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.CryptoProviderCache.TryGetSignatureProvider(Microsoft.IdentityModel.Tokens.SecurityKey,System.String,System.String,System.Boolean,Microsoft.IdentityModel.Tokens.SignatureProvider@)">
+            <summary>
+            Trys to find a <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> in this cache.
+            </summary>
+            <param name="securityKey">the key that is used to by the crypto provider.</param>
+            <param name="algorithm">the algorithm that is used by the crypto provider.</param>
+            <param name="typeofProvider">the typeof the crypto provider obtained by calling object.GetType().</param>
+            <param name="willCreateSignatures">a bool to indicate if the <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> will be used to sign.</param>
+            <param name="signatureProvider">the <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> if found.</param>
+            <returns>true if a <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> was found, false otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.CryptoProviderCache.TryRemove(Microsoft.IdentityModel.Tokens.SignatureProvider)">
+            <summary>
+            Trys to remove a <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> from this cache.
+            </summary>
+            <param name="signatureProvider"><see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> to remove.</param>
+            <returns>true if the <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> was removed, false if the <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> was not found.</returns>
+        </member>
         <member name="T:Microsoft.IdentityModel.Tokens.CryptoProviderFactory">
             <summary>
             Creates <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/>s by specifying a <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/> and algorithm.
@@ -202,12 +248,10 @@
             Returns the default <see cref="T:Microsoft.IdentityModel.Tokens.CryptoProviderFactory"/> instance.
             </summary>
         </member>
-        <member name="P:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.CustomCryptoProvider">
+        <member name="P:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.DefaultCacheSignatureProviders">
             <summary>
-            Extensibility point for custom crypto support application wide.
+            Gets or sets the default value for caching
             </summary>
-            <remarks>By default, if set, <see cref="M:Microsoft.IdentityModel.Tokens.ICryptoProvider.IsSupportedAlgorithm(System.String,System.Object[])"/> will be called before crypto operations.
-            If true is returned, then this will be called for operations.</remarks>
         </member>
         <member name="M:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.#cctor">
             <summary>
@@ -225,20 +269,22 @@
             </summary>
             <param name="other"><see cref="T:Microsoft.IdentityModel.Tokens.CryptoProviderFactory"/> to copy from.</param>
         </member>
-        <member name="M:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.IsSupportedAlgorithm(System.String)">
+        <member name="P:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.CryptoProviderCache">
             <summary>
-            Answers if an algorithm is supported
+            Gets the <see cref="P:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.CryptoProviderCache"/>
             </summary>
-            <param name="algorithm">the name of the crypto algorithm</param>
-            <returns></returns>
         </member>
-        <member name="M:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.IsSupportedAlgorithm(System.String,Microsoft.IdentityModel.Tokens.SecurityKey)">
+        <member name="P:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.CustomCryptoProvider">
             <summary>
-            Checks if an 'algorithm, key' pair is supported.
+            Extensibility point for custom crypto support application wide.
             </summary>
-            <param name="algorithm">the algorithm to check.</param>
-            <param name="key">the <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/>.</param>
-            <returns>true if 'algorithm, key' pair is supported.</returns>
+            <remarks>By default, if set, <see cref="M:Microsoft.IdentityModel.Tokens.ICryptoProvider.IsSupportedAlgorithm(System.String,System.Object[])"/> will be called before crypto operations.
+            If true is returned, then this will be called for operations.</remarks>
+        </member>
+        <member name="P:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.CacheSignatureProviders">
+            <summary>
+            Gets or sets a bool controlling if <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> should be cached.
+            </summary>
         </member>
         <member name="M:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.CreateAuthenticatedEncryptionProvider(Microsoft.IdentityModel.Tokens.SecurityKey,System.String)">
             <summary>
@@ -309,30 +355,6 @@
             <exception cref="T:System.ArgumentException"><see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/>' is not a <see cref="T:Microsoft.IdentityModel.Tokens.AsymmetricSecurityKey"/> or a <see cref="T:Microsoft.IdentityModel.Tokens.SymmetricSecurityKey"/>.</exception>
             <remarks>When finished with the <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> call <see cref="M:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.ReleaseSignatureProvider(Microsoft.IdentityModel.Tokens.SignatureProvider)"/>.</remarks>
         </member>
-        <member name="M:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.ReleaseSignatureProvider(Microsoft.IdentityModel.Tokens.SignatureProvider)">
-            <summary>
-            When finished with a <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> call this method for cleanup. The default behavior is to call <see cref="M:Microsoft.IdentityModel.Tokens.SignatureProvider.Dispose"/>
-            </summary>
-            <param name="signatureProvider"><see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> to be released.</param>
-        </member>
-        <member name="M:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.ReleaseHashAlgorithm(System.Security.Cryptography.HashAlgorithm)">
-            <summary>
-            When finished with a <see cref="T:System.Security.Cryptography.HashAlgorithm"/> call this method for cleanup. The default behavior is to call <see cref="M:System.Security.Cryptography.HashAlgorithm.Dispose"/>
-            </summary>
-            <param name="hashAlgorithm"><see cref="T:System.Security.Cryptography.HashAlgorithm"/> to be released.</param>
-        </member>
-        <member name="M:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.ReleaseKeyWrapProvider(Microsoft.IdentityModel.Tokens.KeyWrapProvider)">
-            <summary>
-            When finished with a <see cref="T:Microsoft.IdentityModel.Tokens.KeyWrapProvider"/> call this method for cleanup."/>
-            </summary>
-            <param name="provider"><see cref="T:Microsoft.IdentityModel.Tokens.KeyWrapProvider"/> to be released.</param>
-        </member>
-        <member name="M:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.ReleaseRsaKeyWrapProvider(Microsoft.IdentityModel.Tokens.RsaKeyWrapProvider)">
-            <summary>
-            When finished with a <see cref="T:Microsoft.IdentityModel.Tokens.RsaKeyWrapProvider"/> call this method for cleanup."/>
-            </summary>
-            <param name="provider"><see cref="T:Microsoft.IdentityModel.Tokens.RsaKeyWrapProvider"/> to be released.</param>
-        </member>
         <member name="M:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.CreateHashAlgorithm(System.String)">
             <summary>
             Returns a <see cref="T:System.Security.Cryptography.HashAlgorithm"/> for a specific algorithm.
@@ -353,6 +375,45 @@
             <remarks>When finished with the <see cref="T:System.Security.Cryptography.HashAlgorithm"/> call <see cref="M:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.ReleaseHashAlgorithm(System.Security.Cryptography.HashAlgorithm)"/>.</remarks>
             <exception cref="T:System.ArgumentNullException">'algorithm' is null or empty.</exception>
             <exception cref="T:System.InvalidOperationException">'algorithm' is not supported.</exception>
+        </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.IsSupportedAlgorithm(System.String)">
+            <summary>
+            Answers if an algorithm is supported
+            </summary>
+            <param name="algorithm">the name of the crypto algorithm</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.IsSupportedAlgorithm(System.String,Microsoft.IdentityModel.Tokens.SecurityKey)">
+            <summary>
+            Checks if an 'algorithm, key' pair is supported.
+            </summary>
+            <param name="algorithm">the algorithm to check.</param>
+            <param name="key">the <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/>.</param>
+            <returns>true if 'algorithm, key' pair is supported.</returns>
+        </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.ReleaseHashAlgorithm(System.Security.Cryptography.HashAlgorithm)">
+            <summary>
+            When finished with a <see cref="T:System.Security.Cryptography.HashAlgorithm"/> call this method for cleanup. The default behavior is to call <see cref="M:System.Security.Cryptography.HashAlgorithm.Dispose"/>
+            </summary>
+            <param name="hashAlgorithm"><see cref="T:System.Security.Cryptography.HashAlgorithm"/> to be released.</param>
+        </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.ReleaseKeyWrapProvider(Microsoft.IdentityModel.Tokens.KeyWrapProvider)">
+            <summary>
+            When finished with a <see cref="T:Microsoft.IdentityModel.Tokens.KeyWrapProvider"/> call this method for cleanup."/>
+            </summary>
+            <param name="provider"><see cref="T:Microsoft.IdentityModel.Tokens.KeyWrapProvider"/> to be released.</param>
+        </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.ReleaseRsaKeyWrapProvider(Microsoft.IdentityModel.Tokens.RsaKeyWrapProvider)">
+            <summary>
+            When finished with a <see cref="T:Microsoft.IdentityModel.Tokens.RsaKeyWrapProvider"/> call this method for cleanup."/>
+            </summary>
+            <param name="provider"><see cref="T:Microsoft.IdentityModel.Tokens.RsaKeyWrapProvider"/> to be released.</param>
+        </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.CryptoProviderFactory.ReleaseSignatureProvider(Microsoft.IdentityModel.Tokens.SignatureProvider)">
+            <summary>
+            When finished with a <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> call this method for cleanup. The default behavior is to call <see cref="M:Microsoft.IdentityModel.Tokens.SignatureProvider.Dispose"/>
+            </summary>
+            <param name="signatureProvider"><see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> to be released.</param>
         </member>
         <member name="T:Microsoft.IdentityModel.Tokens.DateTimeUtil">
             <summary>
@@ -1268,6 +1329,64 @@
             </summary>
             <param name="cryptoInstance">the object returned from <see cref="M:Microsoft.IdentityModel.Tokens.ICryptoProvider.Create(System.String,System.Object[])"/>.</param>
         </member>
+        <member name="T:Microsoft.IdentityModel.Tokens.InMemoryCryptoProviderCache">
+            <summary>
+            Defines a cache for crypto providers.
+            Current support is limited to <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> only.
+            </summary>
+        </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.InMemoryCryptoProviderCache.GetCacheKey(Microsoft.IdentityModel.Tokens.SignatureProvider)">
+            <summary>
+            Returns the cache key to use when looking up an entry into the cache for a <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider" />
+            </summary>
+            <param name="signatureProvider">the <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> to create the key for.</param>
+            <exception cref="T:System.ArgumentNullException">if signatureProvider is null.</exception>
+            <returns>the cache key to use for finding a <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/>.</returns>
+        </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.InMemoryCryptoProviderCache.GetCacheKey(Microsoft.IdentityModel.Tokens.SecurityKey,System.String,System.String)">
+            <summary>
+            Returns the 'key' that will be used to find a crypto provider in this cache.
+            </summary>
+            <param name="securityKey">the key that is used to by the crypto provider.</param>
+            <param name="algorithm">the algorithm that is used by the crypto provider.</param>
+            <param name="typeofProvider">the typeof the crypto provider obtained by calling object.GetType().</param>
+            <exception cref="T:System.ArgumentNullException">if securityKey is null.</exception>
+            <exception cref="T:System.ArgumentNullException">if algorithm is null or empty string.</exception>
+            <exception cref="T:System.ArgumentNullException">if typeofProvider is null or empty string.</exception>
+            <returns>the cache key to use for finding a crypto provider.</returns>
+        </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.InMemoryCryptoProviderCache.TryAdd(Microsoft.IdentityModel.Tokens.SignatureProvider)">
+            <summary>
+            Trys to adds a <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> to this cache.
+            </summary>
+            <param name="signatureProvider"><see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> to cache.</param>
+            <exception cref="T:System.ArgumentNullException">if signatureProvider is null.</exception>
+            <returns>true if the <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> was added, false if the cache already contained the <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/></returns>
+            <remarks>if the <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> is added <see cref="P:Microsoft.IdentityModel.Tokens.SignatureProvider.CryptoProviderCache"/> will be set to 'this'.</remarks>
+        </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.InMemoryCryptoProviderCache.TryGetSignatureProvider(Microsoft.IdentityModel.Tokens.SecurityKey,System.String,System.String,System.Boolean,Microsoft.IdentityModel.Tokens.SignatureProvider@)">
+            <summary>
+            Trys to find a <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> to this cache.
+            </summary>
+            <param name="securityKey">the key that is used to by the crypto provider.</param>
+            <param name="algorithm">the algorithm that is used by the crypto provider.</param>
+            <param name="typeofProvider">the typeof the crypto provider obtained by calling object.GetType().</param>
+            <param name="willCreateSignatures">a bool to indicate if the <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> will be used to sign.</param>
+            <param name="signatureProvider">the <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> if found.</param>
+            <exception cref="T:System.ArgumentNullException">if securityKey is null.</exception>
+            <exception cref="T:System.ArgumentNullException">if algorithm is null or empty string.</exception>
+            <exception cref="T:System.ArgumentNullException">if typeofProvider is null or empty string.</exception>
+            <returns>true if a <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> was found, false otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.InMemoryCryptoProviderCache.TryRemove(Microsoft.IdentityModel.Tokens.SignatureProvider)">
+            <summary>
+            Trys to remove a <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> from this cache.
+            </summary>
+            <param name="signatureProvider"><see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> to remove.</param>
+            <exception cref="T:System.ArgumentNullException">if signatureProvider is null.</exception>
+            <returns>true if the <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> was removed, false if the <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> was not found.</returns>
+            <remarks>if the <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> is removed <see cref="P:Microsoft.IdentityModel.Tokens.SignatureProvider.CryptoProviderCache"/> will be set to null.</remarks>
+        </member>
         <member name="T:Microsoft.IdentityModel.Tokens.ISecurityTokenValidator">
             <summary>
             ISecurityTokenValidator
@@ -1395,6 +1514,11 @@
             </summary>
             Base64urlEncoding
         </member>
+        <member name="P:Microsoft.IdentityModel.Tokens.JsonWebKey.KeyId">
+            <summary>
+            Gets the key id of this <see cref="T:Microsoft.IdentityModel.Tokens.JsonWebKey"/>.
+            </summary>
+        </member>
         <member name="P:Microsoft.IdentityModel.Tokens.JsonWebKey.KeyOps">
             <summary>
             Gets the 'key_ops' (Key Operations)..
@@ -1508,6 +1632,13 @@
             <param name="curveId">Represents ecdsa curve -P256, P384, P521</param>
             <returns>Size of the key in bytes</returns>
         </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.JsonWebKey.GetKeySize(System.String)">
+            <summary>
+            Returns the size of key in bits.
+            </summary>
+            <param name="curveId">Represents ecdsa curve -P256, P384, P512</param>
+            <returns>Size of the key in bits.</returns>
+        </member>
         <member name="M:Microsoft.IdentityModel.Tokens.JsonWebKey.GetMagicValue(System.String,System.Boolean)">
             <summary>
             Returns the magic value representing the curve corresponding to the curve id.
@@ -1585,6 +1716,15 @@
             Initializes an new instance of <see cref="T:Microsoft.IdentityModel.Tokens.JsonWebKeySet"/> from a json string.
             </summary>
             <param name="json">a json string containing values.</param>
+            <exception cref="T:System.ArgumentNullException">If 'json' is null or empty.</exception>
+            <exception cref="T:System.ArgumentException">If 'json' fails to deserialize.</exception>
+        </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.JsonWebKeySet.#ctor(System.String,Newtonsoft.Json.JsonSerializerSettings)">
+            <summary>
+            Initializes an new instance of <see cref="T:Microsoft.IdentityModel.Tokens.JsonWebKeySet"/> from a json string.
+            </summary>
+            <param name="json">a json string containing values.</param>
+            <param name="jsonSerializerSettings">jsonSerializerSettings</param>
             <exception cref="T:System.ArgumentNullException">If 'json' is null or empty.</exception>
             <exception cref="T:System.ArgumentException">If 'json' fails to deserialize.</exception>
         </member>
@@ -1944,20 +2084,37 @@
             <param name="key">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/> that will be used for signature operations.</param>
             <param name="algorithm">The signature algorithm to apply.</param>
             <exception cref="T:System.ArgumentNullException">'key' is null.</exception>
+            <exception cref="T:System.ArgumentNullException">'algorithm' is null or empty.</exception>
+        </member>
+        <member name="P:Microsoft.IdentityModel.Tokens.SignatureProvider.Algorithm">
+            <summary>
+            Gets the signature algorithm.
+            </summary>
         </member>
         <member name="P:Microsoft.IdentityModel.Tokens.SignatureProvider.Context">
             <summary>
             Gets or sets a user context for a <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/>.
             </summary>
         </member>
+        <member name="P:Microsoft.IdentityModel.Tokens.SignatureProvider.CryptoProviderCache">
+            <summary>
+            Gets or sets the <see cref="P:Microsoft.IdentityModel.Tokens.SignatureProvider.CryptoProviderCache"/> that is associated with this <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.SignatureProvider.Dispose">
+            <summary>
+            Calls <see cref="M:Microsoft.IdentityModel.Tokens.SignatureProvider.Dispose(System.Boolean)"/> and <see cref="M:System.GC.SuppressFinalize(System.Object)"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.SignatureProvider.Dispose(System.Boolean)">
+            <summary>
+            Can be over written in descendants to dispose of internal components.
+            </summary>
+            <param name="disposing">true, if called from Dispose(), false, if invoked inside a finalizer</param>
+        </member>
         <member name="P:Microsoft.IdentityModel.Tokens.SignatureProvider.Key">
             <summary>
             Gets the <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/>.
-            </summary>
-        </member>
-        <member name="P:Microsoft.IdentityModel.Tokens.SignatureProvider.Algorithm">
-            <summary>
-            Gets the signature algorithm.
             </summary>
         </member>
         <member name="M:Microsoft.IdentityModel.Tokens.SignatureProvider.Sign(System.Byte[])">
@@ -1975,16 +2132,10 @@
             <param name="signature">signature to compare against.</param>
             <returns>true if the computed signature matches the signature parameter, false otherwise.</returns>
         </member>
-        <member name="M:Microsoft.IdentityModel.Tokens.SignatureProvider.Dispose">
+        <member name="P:Microsoft.IdentityModel.Tokens.SignatureProvider.WillCreateSignatures">
             <summary>
-            Calls <see cref="M:Microsoft.IdentityModel.Tokens.SignatureProvider.Dispose(System.Boolean)"/> and <see cref="M:System.GC.SuppressFinalize(System.Object)"/>
+            Gets or sets a bool indicating if this <see cref="T:Microsoft.IdentityModel.Tokens.SignatureProvider"/> is expected to create signatures.
             </summary>
-        </member>
-        <member name="M:Microsoft.IdentityModel.Tokens.SignatureProvider.Dispose(System.Boolean)">
-            <summary>
-            Can be over written in descendants to dispose of internal components.
-            </summary>
-            <param name="disposing">true, if called from Dispose(), false, if invoked inside a finalizer</param>     
         </member>
         <member name="T:Microsoft.IdentityModel.Tokens.SigningCredentials">
             <summary>
@@ -2071,10 +2222,21 @@
             <param name="key">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/> that will be used for signature operations.</param>
             <param name="algorithm">The signature algorithm to use.</param>
             <exception cref="T:System.ArgumentNullException">'key' is null.</exception>
-            <exception cref="T:System.ArgumentException">If <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/> and algorithm pair are not supported.</exception>
+            <exception cref="T:System.ArgumentNullException">'algorithm' is null or empty.</exception>
+            <exception cref="T:System.NotSupportedException">If <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/> and algorithm pair are not supported.</exception>
             <exception cref="T:System.ArgumentOutOfRangeException">'<see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/>.KeySize' is smaller than <see cref="P:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.MinimumSymmetricKeySizeInBits"/>.</exception>
-            <exception cref="T:System.InvalidOperationException"><see cref="M:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.GetKeyedHashAlgorithm(System.Byte[],System.String)"/> throws.</exception>
-            <exception cref="T:System.InvalidOperationException"><see cref="M:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.GetKeyedHashAlgorithm(System.Byte[],System.String)"/> returns null.</exception>
+        </member>
+        <member name="M:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.#ctor(Microsoft.IdentityModel.Tokens.SecurityKey,System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider"/> class that uses an <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/> to create and / or verify signatures over a array of bytes.
+            </summary>
+            <param name="key">The <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/> that will be used for signature operations.</param>
+            <param name="algorithm">The signature algorithm to use.</param>
+            <param name="willCreateSignatures">indicates if this <see cref="T:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider"/> will be used to create signatures.</param>
+            <exception cref="T:System.ArgumentNullException">'key' is null.</exception>
+            <exception cref="T:System.ArgumentNullException">'algorithm' is null or empty.</exception>
+            <exception cref="T:System.NotSupportedException">If <see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/> and algorithm pair are not supported.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">'<see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/>.KeySize' is smaller than <see cref="P:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.MinimumSymmetricKeySizeInBits"/>.</exception>
         </member>
         <member name="P:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.MinimumSymmetricKeySizeInBits">
             <summary>
@@ -2084,7 +2246,7 @@
         </member>
         <member name="M:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.GetKeyBytes(Microsoft.IdentityModel.Tokens.SecurityKey)">
             <summary>
-            Called to obtain the byte[] needed to create a <see cref="T:System.Security.Cryptography.KeyedHashAlgorithm"/>
+            Called to obtain the byte[] needed to create a <see cref="P:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.KeyedHashAlgorithm"/>
             </summary>
             <param name="key"><see cref="T:Microsoft.IdentityModel.Tokens.SecurityKey"/>that will be used to obtain the byte[].</param>
             <returns><see cref="T:System.Byte"/>[] that is used to populated the KeyedHashAlgorithm.</returns>
@@ -2097,11 +2259,16 @@
         </member>
         <member name="M:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.GetKeyedHashAlgorithm(System.Byte[],System.String)">
             <summary>
-            Returns the <see cref="T:System.Security.Cryptography.KeyedHashAlgorithm"/>.
+            Returns the <see cref="P:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.KeyedHashAlgorithm"/>.
             </summary>
             <param name="algorithm">The hash algorithm to use to create the hash value.</param>
             <param name="keyBytes">The byte array of the key.</param>
             <returns></returns>
+        </member>
+        <member name="P:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.KeyedHashAlgorithm">
+            <summary>
+            Gets the <see cref="P:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.KeyedHashAlgorithm"/> for this <see cref="T:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider"/>.
+            </summary>
         </member>
         <member name="M:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.Sign(System.Byte[])">
             <summary>
@@ -2112,7 +2279,7 @@
             <exception cref="T:System.ArgumentNullException">'input' is null. </exception>
             <exception cref="T:System.ArgumentException">'input.Length' == 0. </exception>
             <exception cref="T:System.ObjectDisposedException"><see cref="M:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.Dispose(System.Boolean)"/> has been called.</exception>
-            <exception cref="T:System.InvalidOperationException"><see cref="T:System.Security.Cryptography.KeyedHashAlgorithm"/> is null. This can occur if a derived type deletes it or does not create it.</exception>
+            <exception cref="T:System.InvalidOperationException"><see cref="P:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.KeyedHashAlgorithm"/> is null. This can occur if a derived type deletes it or does not create it.</exception>
         </member>
         <member name="M:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.Verify(System.Byte[],System.Byte[])">
             <summary>
@@ -2126,7 +2293,7 @@
             <exception cref="T:System.ArgumentException">'input.Length' == 0.</exception>
             <exception cref="T:System.ArgumentException">'signature.Length' == 0. </exception>
             <exception cref="T:System.ObjectDisposedException"><see cref="M:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.Dispose(System.Boolean)"/> has been called.</exception>
-            <exception cref="T:System.InvalidOperationException">If the internal <see cref="T:System.Security.Cryptography.KeyedHashAlgorithm"/> is null. This can occur if a derived type deletes it or does not create it.</exception>
+            <exception cref="T:System.InvalidOperationException">If the internal <see cref="P:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.KeyedHashAlgorithm"/> is null. This can occur if a derived type deletes it or does not create it.</exception>
         </member>
         <member name="M:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.Verify(System.Byte[],System.Byte[],System.Int32)">
             <summary>
@@ -2142,7 +2309,7 @@
             <exception cref="T:System.ArgumentException">'signature.Length' == 0. </exception>
             <exception cref="T:System.ArgumentException">'length &lt; 1'</exception>
             <exception cref="T:System.ObjectDisposedException"><see cref="M:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.Dispose(System.Boolean)"/> has been called.</exception>
-            <exception cref="T:System.InvalidOperationException">If the internal <see cref="T:System.Security.Cryptography.KeyedHashAlgorithm"/> is null. This can occur if a derived type deletes it or does not create it.</exception>
+            <exception cref="T:System.InvalidOperationException">If the internal <see cref="P:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.KeyedHashAlgorithm"/> is null. This can occur if a derived type deletes it or does not create it.</exception>
         </member>
         <member name="M:Microsoft.IdentityModel.Tokens.SymmetricSignatureProvider.Dispose(System.Boolean)">
             <summary>

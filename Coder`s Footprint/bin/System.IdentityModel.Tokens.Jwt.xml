@@ -751,9 +751,9 @@
             <exception cref="T:System.ArgumentNullException">'innerToken' is null.</exception>
             <exception cref="T:System.ArgumentNullException">'rawHeader' is null.</exception>
             <exception cref="T:System.ArgumentNullException">'rawEncryptedKey' is null.</exception>
-            <exception cref="T:System.ArgumentNullException">'rawInitialVector' is null or whitespace.</exception>
-            <exception cref="T:System.ArgumentNullException">'rawCiphertext' is null or whitespace.</exception>
-            <exception cref="T:System.ArgumentNullException">'rawAuthenticationTag' is null or whitespace.</exception>
+            <exception cref="T:System.ArgumentNullException">'rawInitialVector' is null or empty.</exception>
+            <exception cref="T:System.ArgumentNullException">'rawCiphertext' is null or empty.</exception>
+            <exception cref="T:System.ArgumentNullException">'rawAuthenticationTag' is null or empty.</exception>
         </member>
         <member name="M:System.IdentityModel.Tokens.Jwt.JwtSecurityToken.#ctor(System.IdentityModel.Tokens.Jwt.JwtHeader,System.IdentityModel.Tokens.Jwt.JwtPayload)">
             <summary>
@@ -979,6 +979,11 @@
             Default claim type mapping for inbound claims.
             </summary>
         </member>
+        <member name="F:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.DefaultMapInboundClaims">
+            <summary>
+            Default value for the flag that determines whether or not the InboundClaimTypeMap is used.
+            </summary>
+        </member>
         <member name="F:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap">
             <summary>
             Default claim type mapping for outbound claims.
@@ -1002,6 +1007,13 @@
         <member name="M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler"/> class.
+            </summary>
+        </member>
+        <member name="P:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.MapInboundClaims">
+            <summary>
+            Gets or sets the <see cref="P:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.MapInboundClaims"/> property which is used when determining whether or not to map claim types that are extracted when validating a <see cref="T:System.IdentityModel.Tokens.Jwt.JwtSecurityToken"/>. 
+            <para>If this is set to true, the <see cref="P:System.Security.Claims.Claim.Type"/> is set to the JSON claim 'name' after translating using this mapping. Otherwise, no mapping occurs.</para>
+            <para>The default value is true.</para>
             </summary>
         </member>
         <member name="P:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.InboundClaimTypeMap">

@@ -62,7 +62,7 @@ namespace Coder_s_Footprint.Models
         public int Points { get; set; }
         public string Tested_Email { get; set; }
         public string Tested_At { get; set; }
-        public bool Web_Driver_Timed_Out { get; set; }
+        public bool Web_Driver_Wait_Until_Timed_Out { get; set; }
     }
 
     public class ModelLogDatabase

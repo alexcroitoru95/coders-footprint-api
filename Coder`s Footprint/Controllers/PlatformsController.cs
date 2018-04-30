@@ -7,14 +7,12 @@ using System.Data.SqlClient;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Threading;
 using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Description;
 using OpenQA.Selenium.PhantomJS;
-using System.Drawing;
 using System.Linq;
-using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 
 namespace Coder_s_Footprint.Controllers
 {
@@ -38,7 +36,9 @@ namespace Coder_s_Footprint.Controllers
         {
             string value = emailRequest.Email;
 
-            bool exists = false, timedOut = false;
+            bool exists = false, timedOut = false, driverOld = true;
+
+            var webDriverWaitUntilTimeout = new TimeSpan(0, 0, 10);
 
             DateTime TestedAt = DateTime.Now;
 
@@ -47,24 +47,28 @@ namespace Coder_s_Footprint.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, String.Format("Request Body Error! Empty key/value pair or wrong content type, please use x-www-form-urlencoded.")));
             }
 
-            //ChromeOptions option = new ChromeOptions();
-            //option.AddArgument("--headless");
-            //option.AddArgument("no-sandbox");
-            //option.BinaryLocation = GetBinaryLocationofGoogleChrome();
-            //IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
-
-            var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
+            var driver = new PhantomJSDriver(GetPhantomJSDriverService(driverOld));
 
             driver.Navigate().GoToUrl("https://tracker.bugcrowd.com/user/sign_up");
 
-            driver.FindElement(By.CssSelector("#tracker_user_email")).SendKeys(value);
-            driver.FindElement(By.CssSelector("#tracker_user_password")).SendKeys("TestSoftState@01");
-            driver.FindElement(By.CssSelector("#tracker_user_password_confirmation")).SendKeys("TestSoftState@01");
-            driver.FindElement(By.CssSelector("#new_tracker_user > div > fieldset:nth-child(2) > input.bc-btn.bc-btn--block")).Click();
+            WebDriverWait wait = new WebDriverWait(driver, webDriverWaitUntilTimeout);
 
             try
             {
-                var error = driver.FindElement(By.CssSelector("#new_tracker_user > div > fieldset:nth-child(2) > div.field-error-messages > div"));
+                var user_email = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#tracker_user_email")));
+                user_email.SendKeys(value);
+
+                var user_password = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#tracker_user_password")));
+                user_password.SendKeys("FakePassw0rD1@");
+
+                var user_password_confirm = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#tracker_user_password_confirmation")));
+                user_password_confirm.SendKeys("FakePassw0rD1@");
+
+                var submit_button = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#new_tracker_user > div > fieldset:nth-child(2) > input.bc-btn.bc-btn--block")));
+                submit_button.Click();
+
+                var error = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#new_tracker_user > div > fieldset:nth-child(2) > div.field-error-messages > div")));
+
                 if (error.Text.Contains("has already been taken"))
                 {
                     driver.Quit();
@@ -98,7 +102,9 @@ namespace Coder_s_Footprint.Controllers
         {
             string value = emailRequest.Email;
 
-            bool exists = false, timedOut = false;
+            bool exists = false, timedOut = false, driverOld = true;
+
+            var webDriverWaitUntilTimeout = new TimeSpan(0, 0, 10);
 
             DateTime TestedAt = DateTime.Now;
 
@@ -107,23 +113,21 @@ namespace Coder_s_Footprint.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, String.Format("Request Body Error! Empty key/value pair or wrong content type, please use x-www-form-urlencoded.")));
             }
 
-            //ChromeOptions option = new ChromeOptions();
-            //option.AddArgument("--headless");
-            //option.AddArgument("no-sandbox");
-            //IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
-
-            var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
+            var driver = new PhantomJSDriver(GetPhantomJSDriverService(driverOld));
 
             driver.Navigate().GoToUrl("https://signup.live.com/signup?wa=wsignin1.0&wtrealm=urn%3afederation%3aMicrosoftOnline&wctx=estsredirect%3d2%26estsrequest%3drQIIAbPSyigpKSi20tdPTE7OL80r0SvPzEvJLy9OrCotStVLzs_Vyy9Kz0wBsaLYgYJJmTk5SYyGRUJcAi8NHT40Gba57pHO3dXv_8dsFiNHTmYZWNMqRj1C5uoHlyYVJxdlFpRk5ucVX2BkfMHI2MXEYmhgbLyJiSXYMcDzBFPzSblbTIL-RemeKeHFbqkpqUWJINWPmHhDi1OL_PNyKkPys1PzJjHz5eSnZ-bFFxelxafl5JcDBYA2FCQml8SXZCZnp5bsYlYxMUpJNLdMMdI1SzQ21DUxNbLUTTQzN9Q1NE82MzQwMzI3T7Y8wLKB8wKLwC0W1tTE4kyjHyyMi1iBHk1Q_1ki7PPJo6VN--j0NV_fnWLVz9COCMwrNc_N1i71jnAKMi2pzMit9M_Rdklxc_JM9Un3Dw_RLijy9_Uo8bQ1tTLcxUlieAAA0&id=&cbcxt=azubill&lw=1&fl=easi2&bk=1468239878&uaid=f04031e931824586bc1b6dba8f4ffc36&cru=https%3a%2f%2flogin.live.com%2flogin.srf%3fwa%3dwsignin1.0%26wtrealm%3durn%253afederation%253aMicrosoftOnline%26wctx%3destsredirect%253d2%2526estsrequest%253drQIIAbPSyigpKSi20tdPTE7OL80r0SvPzEvJLy9OrCotStVLzs_Vyy9Kz0wBsaLYgYJJmTk5SYyGRUJcAi8NHT40Gba57pHO3dXv_8dsFiNHTmYZWNMqRj1C5uoHlyYVJxdlFpRk5ucVX2BkfMHI2MXEYmhgbLyJiSXYMcDzBFPzSblbTIL-RemeKeHFbqkpqUWJINWPmHhDi1OL_PNyKkPys1PzJjHz5eSnZ-bFFxelxafl5JcDBYA2FCQml8SXZCZnp5bsYlYxMUpJNLdMMdI1SzQ21DUxNbLUTTQzN9Q1NE82MzQwMzI3T7Y8wLKB8wKLwC0W1tTE4kyjHyyMi1iBHk1Q_1ki7PPJo6VN--j0NV_fnWLVz9COCMwrNc_N1i71jnAKMi2pzMit9M_Rdklxc_JM9Un3Dw_RLijy9_Uo8bQ1tTLcxUlieAAA0%26id%3d%26cbcxt%3dazubill%26lw%3d1%26fl%3deasi2%26uaid%3df04031e931824586bc1b6dba8f4ffc36%26lc%3d1033&mkt=EN-US&lc=1033&sl=1&lic=1");
 
-            driver.FindElement(By.Id("MemberName")).SendKeys(value);
-            //driver.FindElement(By.Id("Password")).SendKeys("FakePassw0rD1");
-            driver.FindElement(By.CssSelector("#iSignupAction")).Click();
-            Thread.Sleep(3000);
+            WebDriverWait wait = new WebDriverWait(driver, webDriverWaitUntilTimeout);
 
             try
             {
-                var error = driver.FindElement(By.CssSelector("#MemberNameError"));
+                var user_email = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Id("MemberName")));
+                user_email.SendKeys(value);
+
+                var submit_button = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#iSignupAction")));
+                submit_button.Click();
+
+                var error = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#MemberNameError")));
 
                 if ((error.Text.Contains("is already a Microsoft account.")) || (error.Text.Contains("Try another name or")))
                 {
@@ -158,7 +162,9 @@ namespace Coder_s_Footprint.Controllers
         {
             string value = emailRequest.Email;
 
-            bool exists = false, timedOut = false;
+            bool exists = false, timedOut = false, driverOld = true;
+
+            var webDriverWaitUntilTimeout = new TimeSpan(0, 0, 5);
 
             DateTime TestedAt = DateTime.Now;
 
@@ -167,34 +173,32 @@ namespace Coder_s_Footprint.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, String.Format("Request Body Error! Empty key/value pair or wrong content type, please use x-www-form-urlencoded.")));
             }
 
-            //ChromeOptions option = new ChromeOptions();
-            //option.AddArgument("--headless");
-            //option.AddArgument("no-sandbox");
-            //IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
-
-            var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
+            var driver = new PhantomJSDriver(GetPhantomJSDriverService(driverOld));
 
             driver.Navigate().GoToUrl("https://openid.stackexchange.com/account/register");
 
-            driver.FindElement(By.Id("email")).SendKeys(value);
-            driver.FindElement(By.Id("password")).SendKeys("FakePassw0rD1");
-            driver.FindElement(By.Id("password2")).SendKeys("FakePassw0rD1");
-            driver.FindElement(By.CssSelector("#mainbar > div.registration-form > form > table > tbody > tr:nth-child(6) > td > input")).Click();
-            Thread.Sleep(3000);
+            WebDriverWait wait = new WebDriverWait(driver, webDriverWaitUntilTimeout);
 
             try
             {
-                var error = driver.FindElement(By.CssSelector("#mainbar > div.error > p"));
+                var user_email = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Id("email")));
+                user_email.SendKeys(value);
+
+                var user_password = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Id("password")));
+                user_password.SendKeys("FakePassw0rD1@");
+
+                var user_password_confirm = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Id("password2")));
+                user_password_confirm.SendKeys("FakePassw0rD1@");
+
+                var submit_button = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#mainbar > div.registration-form > form > table > tbody > tr:nth-child(6) > td > input")));
+                submit_button.Click();
+
+                var error = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#mainbar > div.error > p")));
 
                 if ((error.Text.Contains("Email already in use.")))
                 {
                     driver.Quit();
                     exists = true;
-                }
-                else if ((error.Text.Contains("No account with this email found")))
-                {
-                    driver.Quit();
-                    exists = false;
                 }
             }
             catch (Exception ex)
@@ -205,6 +209,7 @@ namespace Coder_s_Footprint.Controllers
                 }
 
                 driver.Quit();
+                exists = false;
             }
 
             PlatformApiCollection PAC = new PlatformApiCollection
@@ -223,7 +228,9 @@ namespace Coder_s_Footprint.Controllers
         {
             string value = emailRequest.Email;
 
-            bool exists = false, timedOut = false;
+            bool exists = false, timedOut = false, driverOld = false;
+
+            var webDriverWaitUntilTimeout = new TimeSpan(0, 0, 10);
 
             DateTime TestedAt = DateTime.Now;
 
@@ -232,24 +239,21 @@ namespace Coder_s_Footprint.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, String.Format("Request Body Error! Empty key/value pair or wrong content type, please use x-www-form-urlencoded.")));
             }
 
-            ChromeOptions option = new ChromeOptions();
-            option.AddArgument("--headless");
-            option.AddArgument("no-sandbox");
-            option.BinaryLocation = GetBinaryLocationofGoogleChrome();
-            IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
-            
-            //var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
+            var driver = new PhantomJSDriver(GetPhantomJSDriverService(driverOld));
 
             driver.Navigate().GoToUrl("https://appleid.apple.com/account#!&page=create");
 
-            driver.FindElement(By.CssSelector("input[type=email]")).SendKeys(value);
-            driver.FindElement(By.Id("password")).Click();
-
-            Thread.Sleep(500);
+            WebDriverWait wait = new WebDriverWait(driver, webDriverWaitUntilTimeout);
 
             try
             {
-                var error = driver.FindElement(By.CssSelector("span.form-message"));
+                var user_email = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("input[type=email]")));
+                user_email.SendKeys(value);
+
+                var user_password = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Id("password")));
+                user_password.Click();
+
+                var error = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("span.form-message")));
 
                 if ((error.Text.Contains("This email address is not available. Choose a different address.")))
                 {
@@ -274,84 +278,10 @@ namespace Coder_s_Footprint.Controllers
 
             PlatformApiCollection PAC = new PlatformApiCollection
             {
-                Platforms = GetPlatformModel("Apple Developer", value, exists, TestedAt, 5, timedOut)
+                Platforms = GetPlatformModel("Apple", value, exists, TestedAt, 5, timedOut)
             };
 
-            //CalculateTotalPoints(exists, value, "Apple Developer", GetPoints(exists, 3));
-
-            return PAC;
-        }
-
-        [AcceptVerbs("POST")]
-        [Route("GitHub/")]
-        public PlatformApiCollection GitHubChekcer([FromBody] EmailRequestModel emailRequest)
-        {
-            string value = emailRequest.Email;
-
-            bool exists = false, timedOut = false;
-
-            DateTime TestedAt = DateTime.Now;
-
-            if (value == null)
-            {
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, String.Format("Request Body Error! Empty key/value pair or wrong content type, please use x-www-form-urlencoded.")));
-            }
-
-            //ChromeOptions option = new ChromeOptions();
-            //option.AddArgument("--headless");
-            //option.AddArgument("no-sandbox");
-            //IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
-
-            var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
-            driver.Manage().Window.Size = new Size(1920, 1080);
-
-            try
-            {
-               driver.Navigate().GoToUrl("https://github.com/join?source=header-home");
-
-               Thread.Sleep(6000);
-
-                TakeScreenshot(driver, "github 1");
-
-                //driver.FindElement(By.CssSelector("#user_login")).SendKeys("testsoftstate");
-                driver.FindElement(By.CssSelector("#user_email")).SendKeys(value);
-
-               //driver.FindElement(By.CssSelector("#user_password")).SendKeys("TestSoftState@01)");
-               //TakeScreenshot(driver, "github 1");
-
-               //driver.FindElement(By.CssSelector("#signup_button")).Click();
-
-               Thread.Sleep(1000);
-                           
-               var error = driver.FindElement(By.CssSelector("#signup-form > auto-check:nth-child(5) > dl > dd.error"));
-
-               if (error.Text.Contains("Email is invalid or already taken"))
-               {
-                  //TakeScreenshot(driver, "github 2");
-                  driver.Quit();
-                  exists = true;
-               }
-            }
-            catch (Exception ex)
-            {
-                if (ex is WebDriverException)
-                {
-                    if (ex.Message.Contains("timed out after 60 seconds"))
-                    {
-                        timedOut = true;
-                    }
-                }
-
-                driver.Quit();
-                exists = false;
-            }
-
-            PlatformApiCollection PAC = new PlatformApiCollection
-            {
-                Platforms = GetPlatformModel("GitHub", value, exists, TestedAt, GetPoints(exists, 1), timedOut)
-            };
-
-            CalculateTotalPoints(exists, value, "GitHub", GetPoints(exists, 1));
+            CalculateTotalPoints(exists, value, "Apple", GetPoints(exists, 3));
 
             return PAC;
         }
@@ -362,7 +292,9 @@ namespace Coder_s_Footprint.Controllers
         {
             string value = emailRequest.Email;
 
-            bool exists = false, timedOut = false;
+            bool exists = false, timedOut = false, driverOld = true;
+
+            var webDriverWaitUntilTimeout = new TimeSpan(0, 0, 10);
 
             DateTime TestedAt = DateTime.Now;
 
@@ -371,23 +303,21 @@ namespace Coder_s_Footprint.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, String.Format("Request Body Error! Empty key/value pair or wrong content type, please use x-www-form-urlencoded.")));
             }
 
-            //ChromeOptions option = new ChromeOptions();
-            //option.AddArgument("--headless");
-            //option.AddArgument("no-sandbox");
-            //IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
-
-            var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
+            var driver = new PhantomJSDriver(GetPhantomJSDriverService(driverOld));
 
             driver.Navigate().GoToUrl("https://forum.xda-developers.com/register.php");
 
-            driver.FindElement(By.CssSelector("#regusername")).SendKeys(value);
-            driver.FindElement(By.CssSelector("#regpassword")).Click();
-
-            Thread.Sleep(3000);
+            WebDriverWait wait = new WebDriverWait(driver, webDriverWaitUntilTimeout);
 
             try
             {
-                var error = driver.FindElement(By.CssSelector("#reg_verif_div"));
+                var username = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#regusername")));
+                username.SendKeys(value);
+
+                var user_password = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#regpassword")));
+                user_password.Click();
+
+                var error = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#reg_verif_div")));
 
                 if (error.Text.Contains("That username is already in use"))
                 {
@@ -399,10 +329,7 @@ namespace Coder_s_Footprint.Controllers
             {
                 if (ex is WebDriverException)
                 {
-                    if(ex.Message.Contains("timed out after 60 seconds"))
-                    {
-                       timedOut = true;
-                    }
+                    timedOut = true;
                 }
 
                 driver.Quit();
@@ -425,7 +352,9 @@ namespace Coder_s_Footprint.Controllers
         {
             string value = emailRequest.Email;
 
-            bool exists = false, timedOut = false;
+            bool exists = false, timedOut = false, driverOld = false;
+
+            var webDriverWaitUntilTimeout = new TimeSpan(0, 0, 5);
 
             DateTime TestedAt = DateTime.Now;
 
@@ -434,26 +363,24 @@ namespace Coder_s_Footprint.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, String.Format("Request Body Error! Empty key/value pair or wrong content type, please use x-www-form-urlencoded.")));
             }
 
-            ChromeOptions option = new ChromeOptions();
-            option.AddArgument("--headless");
-            option.AddArgument("no-sandbox");
-            IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
-
-            //var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
+            var driver = new PhantomJSDriver(GetPhantomJSDriverService(driverOld));
 
             driver.Navigate().GoToUrl("https://www.codecademy.com/");
 
-            TakeScreenshot(driver, "udemy");
-
-            driver.FindElement(By.Name("user[username]")).SendKeys(RandomString(15));
-            driver.FindElement(By.Name("user[email]")).SendKeys(value);
-            driver.FindElement(By.Name("user[password]")).SendKeys(RandomString(15));
-
-            Thread.Sleep(500);
+            WebDriverWait wait = new WebDriverWait(driver, webDriverWaitUntilTimeout);
 
             try
             {
-                var error = driver.FindElement(By.CssSelector("ul[class^='fieldErrors']"));
+                var username = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Name("user[username]")));
+                username.SendKeys(RandomString(15));
+
+                var user_email = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Name("user[email]")));
+                user_email.SendKeys(value);
+
+                var user_password = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Name("user[password]")));
+                user_password.SendKeys(RandomString(15));
+
+                var error = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("ul[class^='fieldErrors']")));
 
                 if (error.Text.Contains("Email is already taken"))
                 {
@@ -465,10 +392,7 @@ namespace Coder_s_Footprint.Controllers
             {
                 if (ex is WebDriverException)
                 {
-                    if (ex.Message.Contains("timed out after 60 seconds"))
-                    {
-                        timedOut = true;
-                    }
+                    timedOut = true;
                 }
 
                 driver.Quit();
@@ -491,7 +415,9 @@ namespace Coder_s_Footprint.Controllers
         {
             string value = emailRequest.Email;
 
-            bool exists = false, timedOut = false;
+            bool exists = false, timedOut = false, driverOld = false;
+
+            var webDriverWaitUntilTimeout = new TimeSpan(0, 0, 10);
 
             DateTime TestedAt = DateTime.Now;
 
@@ -500,37 +426,35 @@ namespace Coder_s_Footprint.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, String.Format("Request Body Error! Empty key/value pair or wrong content type, please use x-www-form-urlencoded.")));
             }
 
-            ChromeOptions option = new ChromeOptions();
-            option.AddArgument("--headless");
-            option.AddArgument("no-sandbox");
-            option.BinaryLocation = GetBinaryLocationofGoogleChrome();
-            IWebDriver driver = new ChromeDriver(GetChromeDriverDirectory(), option);
-
-            //var driver = new PhantomJSDriver(GetBinaryLocationofPhantomJS());
+            var driver = new PhantomJSDriver(GetPhantomJSDriverService(driverOld));
 
             driver.Navigate().GoToUrl("https://accounts.google.com/signup/v2/webcreateaccount?service=ahsid&continue=https%3A%2F%2Fdevelopers.google.com%2F%3Frefresh%3D1&flowName=GlifWebSignIn&flowEntry=SignUp&hl=en");
 
-            Thread.Sleep(500);
-
-            driver.FindElement(By.CssSelector("#firstName")).SendKeys(RandomString(15));
-            driver.FindElement(By.CssSelector("#lastName")).SendKeys(RandomString(15));
-            driver.FindElement(By.CssSelector("#username")).SendKeys(value);
-            driver.FindElement(By.Name("Passwd")).SendKeys("test123test");
-            driver.FindElement(By.Name("ConfirmPasswd")).SendKeys("test123test");
-            driver.FindElement(By.CssSelector("#accountDetailsNext > content > span")).Click();
-
-            Thread.Sleep(500);
+            WebDriverWait wait = new WebDriverWait(driver, webDriverWaitUntilTimeout);
 
             try
             {
-                //TakeScreenshot(driver, "gmail");
+                var user_first_name = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#firstName")));
+                user_first_name.SendKeys(RandomString(15));
 
-                TakeScreenshot(driver, "google");
+                var user_last_name = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#lastName")));
+                user_last_name.SendKeys(RandomString(15));
 
-                var error = driver.FindElement(By.CssSelector("#view_container > form > div.mbekbe.bxPAYd > div > div.RCum0c > div:nth-child(2) > div.fQxwff > div > div.LXRPh > div.dEOOab.RxsGPe"));
+                var username = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#username")));
+                username.SendKeys(value);
 
-               if(error.Text.Contains("That username is taken. Try another."))
-                
+                var user_password = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Name("Passwd")));
+                user_password.SendKeys("FakePassw0rD1@");
+
+                var user_password_confirm = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Name("ConfirmPasswd")));
+                user_password_confirm.SendKeys("FakePassw0rD1@");
+
+                var submit_button = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#accountDetailsNext > content > span")));
+                submit_button.Click();
+
+                var error = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#view_container > form > div.mbekbe.bxPAYd > div > div.RCum0c > div:nth-child(2) > div.fQxwff > div > div.LXRPh > div.dEOOab.RxsGPe")));
+
+                if(error.Text.Contains("That username is taken. Try another."))
                 {
                     driver.Quit();
                     exists = true;
@@ -540,10 +464,7 @@ namespace Coder_s_Footprint.Controllers
             {
                 if (ex is WebDriverException)
                 {
-                    if (ex.Message.Contains("timed out after 60 seconds"))
-                    {
-                        timedOut = true;
-                    }
+                    timedOut = true;
                 }
 
                 driver.Quit();
@@ -572,7 +493,8 @@ namespace Coder_s_Footprint.Controllers
         public static void TakeScreenshot(IWebDriver driver, String screenshotName)
         {
             Screenshot ss = ((ITakesScreenshot)driver).GetScreenshot();
-            ss.SaveAsFile("E:\\" + screenshotName + ".png", ScreenshotImageFormat.Png);
+            ss.SaveAsFile("E:\\" + screenshotName + ".jpg", ScreenshotImageFormat.Jpeg);
+
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
@@ -688,7 +610,7 @@ namespace Coder_s_Footprint.Controllers
                     Has_Account = exists,
                     Points = points,
                     Tested_At = testedAt.ToString("dd/MM/yyyy HH:mm"),
-                    Web_Driver_Timed_Out = timedOut,
+                    Web_Driver_Wait_Until_Timed_Out = timedOut,
                 }
             };
 
@@ -696,31 +618,43 @@ namespace Coder_s_Footprint.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public static string GetBinaryLocationofPhantomJS()
+        public static string GetDriverLocationofPhantomJSVersion2_1_1()
         {
             var currentDirectory = HostingEnvironment.ApplicationPhysicalPath;
-            string phantomJSDriverDirectory = currentDirectory + "Resources//PhantomJS Driver//";
+            string phantomJSDriverDirectory = currentDirectory + "Resources//PhantomJS Driver//2.1.1//";
 
             return phantomJSDriverDirectory;
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public static string GetBinaryLocationofGoogleChrome()
+        public static string GetDriverLocationofPhantomJSVersion1_9_8()
         {
             var currentDirectory = HostingEnvironment.ApplicationPhysicalPath;
-            string chromeDriverDirectory = currentDirectory + @"Resources\Chromium\chrome.exe";
+            string phantomJSDriverDirectory = currentDirectory + "Resources//PhantomJS Driver//1.9.8//";
 
-            return chromeDriverDirectory;
+            return phantomJSDriverDirectory;
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public static string GetChromeDriverDirectory()
+        public static PhantomJSDriverService GetPhantomJSDriverService(bool driverOld)
         {
-            var currentDirectory = HostingEnvironment.ApplicationPhysicalPath;
-            string chromeDriverDirectory = currentDirectory + @"Resources\Chrome Driver\";
+            if(driverOld == true)
+            {
+                var service = PhantomJSDriverService.CreateDefaultService(GetDriverLocationofPhantomJSVersion1_9_8());
+                service.IgnoreSslErrors = true;
+                service.LoadImages = false;
 
-            return chromeDriverDirectory;
+                return service;
+            }
+            else
+            {
+                var service = PhantomJSDriverService.CreateDefaultService(GetDriverLocationofPhantomJSVersion2_1_1());
+                service.IgnoreSslErrors = true;
+                service.LoadImages = false;
+
+                return service;
+            }
+            
         }
-
     }
 }
