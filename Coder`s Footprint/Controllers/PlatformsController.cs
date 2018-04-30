@@ -278,10 +278,10 @@ namespace Coder_s_Footprint.Controllers
 
             PlatformApiCollection PAC = new PlatformApiCollection
             {
-                Platforms = GetPlatformModel("Apple", value, exists, TestedAt, 5, timedOut)
+                Platforms = GetPlatformModel("Apple", value, exists, TestedAt, GetPoints(exists, 8), timedOut)
             };
 
-            CalculateTotalPoints(exists, value, "Apple", GetPoints(exists, 3));
+            CalculateTotalPoints(exists, value, "Apple", GetPoints(exists, 8));
 
             return PAC;
         }

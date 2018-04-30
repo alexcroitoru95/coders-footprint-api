@@ -36,6 +36,8 @@ namespace Coder_s_Footprint.Controllers
             {
                 username = "none";
 
+                PlatformsController.CalculateTotalPoints(false, user_email, "GitHub", PlatformsController.GetPoints(false, 1));
+
                 List<GitHubAPIUserRepository> gitHubAPINoUserRepositories = new List<GitHubAPIUserRepository>();
                 gitHubAPINoUserRepositories.Clear();
 
@@ -54,6 +56,8 @@ namespace Coder_s_Footprint.Controllers
             }
             else
             {
+                PlatformsController.CalculateTotalPoints(true, user_email, "GitHub", PlatformsController.GetPoints(true, 1));
+
                 List<GitHubAPIUserRepository> gitHubAPIUserRepositoriesCollection = GetUserRepositories(username);
 
                 int total_number_of_repositories = gitHubAPIUserRepositoriesCollection.Count;
