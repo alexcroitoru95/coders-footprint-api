@@ -476,7 +476,7 @@ namespace Coder_s_Footprint.Controllers
                 Platforms = GetPlatformModel("Google", value, exists, TestedAt, GetPoints(exists, 7), timedOut)
             };
 
-            CalculateTotalPoints(exists, value, "Google", GetPoints(exists, 7));
+            //CalculateTotalPoints(exists, value, "Google", GetPoints(exists, 7));
 
             return PAC;
         }

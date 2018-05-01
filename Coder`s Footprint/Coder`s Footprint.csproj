@@ -242,6 +242,19 @@
     <Content Include="Content\css\micons\micons.css" />
     <Content Include="Content\css\vendor.css" />
     <Content Include="Content\favicon.ico" />
+    <Content Include="Content\favicons\android-chrome-192x192.png" />
+    <Content Include="Content\favicons\android-chrome-512x512.png" />
+    <Content Include="Content\favicons\apple-touch-icon-120x120.png" />
+    <Content Include="Content\favicons\apple-touch-icon-152x152.png" />
+    <Content Include="Content\favicons\apple-touch-icon-180x180.png" />
+    <Content Include="Content\favicons\apple-touch-icon-60x60.png" />
+    <Content Include="Content\favicons\apple-touch-icon-76x76.png" />
+    <Content Include="Content\favicons\apple-touch-icon.png" />
+    <Content Include="Content\favicons\browserconfig.xml" />
+    <Content Include="Content\favicons\favicon-16x16.png" />
+    <Content Include="Content\favicons\favicon-32x32.png" />
+    <Content Include="Content\favicons\mstile-150x150.png" />
+    <Content Include="Content\favicons\safari-pinned-tab.svg" />
     <Content Include="Content\images\app-screens-1200.png" />
     <Content Include="Content\images\app-screens-2800.png" />
     <Content Include="Content\images\app-screens-600.png" />
@@ -365,6 +378,7 @@
     <Content Include="Scripts\esm\popper.js.map" />
     <Content Include="Scripts\esm\popper-utils.min.js.map" />
     <Content Include="Scripts\esm\popper-utils.js.map" />
+    <Content Include="Content\favicons\site.webmanifest" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
