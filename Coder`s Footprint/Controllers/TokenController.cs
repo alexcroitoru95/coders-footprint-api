@@ -55,9 +55,9 @@ namespace Coder_s_Footprint.Controllers
         private GeneratedTokenResponse CreateToken(string username)
         {
             //Set issued at date
-            DateTime issuedAt = DateTime.Now;
+            DateTime issuedAt = DateTime.UtcNow;
             //set the time when it expires
-            DateTime expires = DateTime.Now.AddDays(7);
+            DateTime expires = issuedAt.AddDays(7);
 
             //http://stackoverflow.com/questions/18223868/how-to-encrypt-jwt-security-token
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -83,8 +83,8 @@ namespace Coder_s_Footprint.Controllers
 
             GeneratedTokenResponse GeneratedTokenResponse = new GeneratedTokenResponse
             {
-                Issued_At = issuedAt.ToString("dd/MM/yyyy HH:mm"),
-                Expires_At = expires.ToString("dd/MM/yyyy HH:mm"),
+                Issued_At = issuedAt,
+                Expires_At = expires.ToString("o"),
                 Requesting_Token = username,
                 Token = "Bearer " + tokenString,
             };

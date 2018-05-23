@@ -44,7 +44,7 @@ namespace Coder_s_Footprint.Models
 
     public class GeneratedTokenResponse
     {
-        public string Issued_At { get; set; }
+        public DateTime Issued_At { get; set; }
         public string Expires_At { get; set; }
         public string Requesting_Token { get; set; }
         public string Token { get; set; }
