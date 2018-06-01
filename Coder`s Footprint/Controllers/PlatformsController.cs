@@ -164,7 +164,7 @@ namespace Coder_s_Footprint.Controllers
 
             bool exists = false, timedOut = false, driverOld = true;
 
-            var webDriverWaitUntilTimeout = new TimeSpan(0, 0, 5);
+            var webDriverWaitUntilTimeout = new TimeSpan(0, 0, 60);
 
             DateTime TestedAt = DateTime.Now;
 
@@ -175,27 +175,24 @@ namespace Coder_s_Footprint.Controllers
 
             var driver = new PhantomJSDriver(GetPhantomJSDriverService(driverOld));
 
-            driver.Navigate().GoToUrl("https://openid.stackexchange.com/account/register");
+            driver.Navigate().GoToUrl("https://stackoverflow.com/users/signup");
 
             WebDriverWait wait = new WebDriverWait(driver, webDriverWaitUntilTimeout);
 
             try
             {
-                var user_email = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Id("email")));
+                var user_email = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#email")));
                 user_email.SendKeys(value);
 
-                var user_password = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Id("password")));
+                var user_password = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#password")));
                 user_password.SendKeys("FakePassw0rD1@");
 
-                var user_password_confirm = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Id("password2")));
-                user_password_confirm.SendKeys("FakePassw0rD1@");
-
-                var submit_button = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#mainbar > div.registration-form > form > table > tbody > tr:nth-child(6) > td > input")));
+                var submit_button = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#submit-button")));
                 submit_button.Click();
 
-                var error = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#mainbar > div.error > p")));
+                var error = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#mainbar-full > div:nth-child(2) > div > div")));
 
-                if ((error.Text.Contains("Email already in use.")))
+                if ((error.Text.Contains("The email address you have used is already registered.")))
                 {
                     driver.Quit();
                     exists = true;
