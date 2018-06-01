@@ -164,7 +164,7 @@ namespace Coder_s_Footprint.Controllers
 
             bool exists = false, timedOut = false, driverOld = true;
 
-            var webDriverWaitUntilTimeout = new TimeSpan(0, 0, 60);
+            var webDriverWaitUntilTimeout = new TimeSpan(0, 0, 15);
 
             DateTime TestedAt = DateTime.Now;
 
@@ -202,11 +202,11 @@ namespace Coder_s_Footprint.Controllers
             {
                 if (ex is WebDriverException)
                 {
-                    timedOut = true;
-                }
+                    timedOut = false;
 
-                driver.Quit();
-                exists = false;
+                    driver.Quit();
+                    exists = false;
+                }
             }
 
             PlatformApiCollection PAC = new PlatformApiCollection
