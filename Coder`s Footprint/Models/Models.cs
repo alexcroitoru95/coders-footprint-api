@@ -22,6 +22,7 @@ namespace Coder_s_Footprint.Models
     public class DisplayNameRequestModel
     {
         public string DisplayName { get; set; }
+        public string Email { get; set; }
     }
 
     public class EmailRequestCode
@@ -105,6 +106,7 @@ namespace Coder_s_Footprint.Models
         public int Subscriptions { get; set; }
         public int TotalRepositories { get; set; }
         public List<GitHubAPIUserRepository> Repositories { get; set; }
+        public int Total_Points { get; set; }
         public string Tested_At { get; set; }
     }
 
@@ -115,6 +117,7 @@ namespace Coder_s_Footprint.Models
         public int Questions { get; set; }
         public int Answers { get; set; }
         public int Comments { get; set; }
+        public int Total_Points { get; set; }
         public string Tested_At { get; set; }
     }
 }

@@ -24,9 +24,16 @@ namespace Coder_s_Footprint.Controllers
         [Route("GetUserProfile/")]
         public StackExchangeAPIUserProfile GetUserProfile([FromBody] DisplayNameRequestModel displayNameRequest)
         {
+
             DateTime TestedAt = DateTime.Now;
 
             string displayName = displayNameRequest.DisplayName;
+
+            string email = displayNameRequest.Email;
+
+            var total_points = PlatformsController.GetPoints(true, 2);
+
+            var extra_points = 0;
 
             if (displayName == null)
             {
@@ -41,6 +48,26 @@ namespace Coder_s_Footprint.Controllers
 
             int comments = GetUserComments(userId);
 
+            if (questions > 0)
+            {
+                extra_points = PlatformsController.GetPoints(true, 15);
+                total_points += extra_points;
+            }
+
+            if (answers > 0)
+            {
+                extra_points = PlatformsController.GetPoints(true, 16);
+                total_points += extra_points;
+            }
+
+            if (comments > 0)
+            {
+                extra_points = PlatformsController.GetPoints(true, 17);
+                total_points += extra_points;
+            }
+
+            PlatformsController.CalculateTotalPoints(true, email, "StackOverflow", total_points);
+
             StackExchangeAPIUserProfile stackOverflowAPIUserProfile = new StackExchangeAPIUserProfile
             {
                 DisplayName = displayName,
@@ -48,6 +75,7 @@ namespace Coder_s_Footprint.Controllers
                 Questions = questions,
                 Answers = answers,
                 Comments = comments,
+                Total_Points = total_points,
                 Tested_At = TestedAt.ToString("dd/MM/yyyy HH:mm")
             };
 

@@ -99,6 +99,63 @@ namespace Coder_s_Footprint.Controllers
         }
 
         [AcceptVerbs("POST")]
+        [Route("DZone/")]
+        public PlatformApiCollection DZoneChecker([FromBody] EmailRequestModel emailRequest)
+        {
+            string value = emailRequest.Email;
+
+            bool exists = false, timedOut = false, driverOld = true;
+
+            var webDriverWaitUntilTimeout = new TimeSpan(0, 0, 10);
+
+            DateTime TestedAt = DateTime.Now;
+
+            if (value == null)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, String.Format("Request Body Error! Empty key/value pair or wrong content type, please use x-www-form-urlencoded.")));
+            }
+
+            var driver = new PhantomJSDriver(GetPhantomJSDriverService(driverOld));
+
+            driver.Navigate().GoToUrl("https://dzone.com/user/register?step=1");
+
+            WebDriverWait wait = new WebDriverWait(driver, webDriverWaitUntilTimeout);
+
+            try
+            {
+                var user_email = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#_email")));
+                user_email.SendKeys(value);
+
+                var error = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("body > div.container-fluid.body > div > div.col-md-12.usersRegistration4.layout-card.usersRegistration.oUhbwfbfZvbllfWVcC.ng-scope > div > div.col-md-12.registration-content > div > div > div > form > div:nth-child(1) > div > div.text-danger.ng-scope")));
+
+                if (error.Text.Contains("Email already in use"))
+                {
+                    driver.Quit();
+                    exists = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex is WebDriverException)
+                {
+                    timedOut = true;
+                }
+
+                driver.Quit();
+                exists = false;
+            }
+
+            PlatformApiCollection PAC = new PlatformApiCollection
+            {
+                Platforms = GetPlatformModel("DZone", value, exists, TestedAt, GetPoints(exists, 10), timedOut)
+            };
+
+            CalculateTotalPoints(exists, value, "DZone", GetPoints(exists, 10));
+
+            return PAC;
+        }
+
+        [AcceptVerbs("POST")]
         [Route("Microsoft/")]
         public PlatformApiCollection MicrosoftChecker([FromBody] EmailRequestModel emailRequest)
         {
@@ -222,12 +279,12 @@ namespace Coder_s_Footprint.Controllers
         }
 
         [AcceptVerbs("POST")]
-        [Route("Apple/")]
-        public PlatformApiCollection AppleDeveloperChecker([FromBody] EmailRequestModel emailRequest)
+        [Route("SAP/")]
+        public PlatformApiCollection SAPDeveloperChecker([FromBody] EmailRequestModel emailRequest)
         {
             string value = emailRequest.Email;
 
-            bool exists = false, timedOut = false, driverOld = false;
+            bool exists = false, timedOut = false, driverOld = true;
 
             var webDriverWaitUntilTimeout = new TimeSpan(0, 0, 10);
 
@@ -240,21 +297,49 @@ namespace Coder_s_Footprint.Controllers
 
             var driver = new PhantomJSDriver(GetPhantomJSDriverService(driverOld));
 
-            driver.Navigate().GoToUrl("https://appleid.apple.com/account#!&page=create");
+            driver.Navigate().GoToUrl("https://accounts.sap.com/ui/public/showRegisterForm?spName=wcms_sapdx_prod_29052019&targetUrl=&sourceUrl=");
 
             WebDriverWait wait = new WebDriverWait(driver, webDriverWaitUntilTimeout);
+            driver.Manage().Window.Maximize();
 
             try
             {
-                var user_email = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("input[type=email]")));
+                var user_first_name= wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#firstName")));
+                user_first_name.SendKeys(RandomString(15));
+
+                var user_last_name = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#lastName")));
+                user_last_name.SendKeys(RandomString(15));
+
+                var username = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#userName")));
+                username.SendKeys(RandomString(15).ToLower());
+
+                var user_email = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#mail")));
                 user_email.SendKeys(value);
 
-                var user_password = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Id("password")));
-                user_password.Click();
+                var user_password = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#newPasswordInput")));
+                user_password.SendKeys("FakePassw0rD1@");
 
-                var error = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("span.form-message")));
+                var user_password_confirm = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#retypeNewPasswordInput")));
+                user_password_confirm.SendKeys("FakePassw0rD1@");
 
-                if ((error.Text.Contains("This email address is not available. Choose a different address.")))
+                SelectElement selectCountry = new SelectElement(wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#companyCountry"))));
+                selectCountry.SelectByText("Serbia");
+
+                var newsletter_radio = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#contactPrefEmail_no")));
+                newsletter_radio.Click();
+
+                var privacy_statement_radio = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#pdAccept")));
+                privacy_statement_radio.Click();
+
+                var terms_and_cond_radio = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#touAccept")));
+                terms_and_cond_radio.Click();
+
+                var register_button = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#sapStoreRegisterFormSubmit")));
+                register_button.Click();
+
+                var error = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Id("mail.errors")));
+
+                if (error.Text.Contains("This e-mail address has already been registered"))
                 {
                     driver.Quit();
                     exists = true;
@@ -277,10 +362,10 @@ namespace Coder_s_Footprint.Controllers
 
             PlatformApiCollection PAC = new PlatformApiCollection
             {
-                Platforms = GetPlatformModel("Apple", value, exists, TestedAt, GetPoints(exists, 8), timedOut)
+                Platforms = GetPlatformModel("SAP", value, exists, TestedAt, GetPoints(exists, 8), timedOut)
             };
 
-            CalculateTotalPoints(exists, value, "Apple", GetPoints(exists, 8));
+            CalculateTotalPoints(exists, value, "SAP", GetPoints(exists, 8));
 
             return PAC;
         }
@@ -291,9 +376,9 @@ namespace Coder_s_Footprint.Controllers
         {
             string value = emailRequest.Email;
 
-            bool exists = false, timedOut = false, driverOld = true;
+            bool exists = false, timedOut = false, driverOld = false;
 
-            var webDriverWaitUntilTimeout = new TimeSpan(0, 0, 10);
+            var webDriverWaitUntilTimeout = new TimeSpan(0, 0, 30);
 
             DateTime TestedAt = DateTime.Now;
 
@@ -370,18 +455,20 @@ namespace Coder_s_Footprint.Controllers
 
             try
             {
-                var username = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Name("user[username]")));
+                var username = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#sign_up_form_username")));
                 username.SendKeys(RandomString(15));
 
-                var user_email = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Name("user[email]")));
+                var user_email = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#sign_up_form_email")));
                 user_email.SendKeys(value);
 
-                var user_password = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Name("user[password]")));
+                var user_password = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#sign_up_form_password")));
                 user_password.SendKeys(RandomString(15));
 
-                var error = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("ul[class^='fieldErrors']")));
+                var error_InputName = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("label[for^='sign_up_form_email']")));
 
-                if (error.Text.Contains("Email is already taken"))
+                var error_IsTaken = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("div[class^='FormGroupDescription']")));
+
+                if (error_InputName.Text.Contains("Email") && error_IsTaken.Text.Contains("is already taken"))
                 {
                     driver.Quit();
                     exists = true;
@@ -404,6 +491,68 @@ namespace Coder_s_Footprint.Controllers
             };
 
             CalculateTotalPoints(exists, value, "Codecademy", GetPoints(exists, 4));
+
+            return PAC;
+        }
+
+        [AcceptVerbs("POST")]
+        [Route("Yahoo/")]
+        public PlatformApiCollection YahooAccountChecker([FromBody] EmailRequestModel emailRequest)
+        {
+            string value = emailRequest.Email;
+
+            bool exists = false, timedOut = false, driverOld = false;
+
+            var webDriverWaitUntilTimeout = new TimeSpan(0, 0, 10);
+
+            DateTime TestedAt = DateTime.Now;
+
+            if (value == null)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.UnsupportedMediaType, String.Format("Request Body Error! Empty key/value pair or wrong content type, please use x-www-form-urlencoded.")));
+            }
+
+            var driver = new PhantomJSDriver(GetPhantomJSDriverService(driverOld));
+
+            driver.Navigate().GoToUrl("https://login.yahoo.com/account/create");
+
+            WebDriverWait wait = new WebDriverWait(driver, webDriverWaitUntilTimeout);
+
+            try
+            {
+                var emailWithoutAt = value.Substring(0, value.LastIndexOf('@'));
+
+                var email = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#usernamereg-yid")));
+                email.SendKeys(emailWithoutAt);
+
+                var user_password = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#usernamereg-password")));
+                user_password.SendKeys("FakePassw0rD1@");
+
+                var error = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.CssSelector("#reg-error-yid")));
+
+                if (error.Text.Contains("Există deja un cont Yahoo care are asociată această adresă de e-mail.") || error.Text.Contains("A Yahoo account already exists with this email address."))
+                {
+                    driver.Quit();
+                    exists = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex is WebDriverException)
+                {
+                    timedOut = true;
+                }
+
+                driver.Quit();
+                exists = false;
+            }
+
+            PlatformApiCollection PAC = new PlatformApiCollection
+            {
+                Platforms = GetPlatformModel("Yahoo", value, exists, TestedAt, GetPoints(exists, 9), timedOut)
+            };
+
+            CalculateTotalPoints(exists, value, "Yahoo", GetPoints(exists, 9));
 
             return PAC;
         }
@@ -475,7 +624,7 @@ namespace Coder_s_Footprint.Controllers
                 Platforms = GetPlatformModel("Google", value, exists, TestedAt, GetPoints(exists, 7), timedOut)
             };
 
-            //CalculateTotalPoints(exists, value, "Google", GetPoints(exists, 7));
+            CalculateTotalPoints(exists, value, "Google", GetPoints(exists, 7));
 
             return PAC;
         }
@@ -535,7 +684,7 @@ namespace Coder_s_Footprint.Controllers
         public static void CalculateTotalPoints(bool hasAccount, string email, string testedPlatformName, int points)
         {
             ModelLogDatabase modelLogDB = new ModelLogDatabase();
-            StringBuilder concatenateTestedPlatforms = new StringBuilder();
+            StringBuilder concatenatedTestedPlatforms = new StringBuilder();
             DateTime testedAt = DateTime.Now;
 
             if (hasAccount == false)
@@ -552,11 +701,11 @@ namespace Coder_s_Footprint.Controllers
                 {
                     if (testedPlatform.Contains("Google"))
                     {
-                       concatenateTestedPlatforms.Append(testedPlatform);
+                       concatenatedTestedPlatforms.Append(testedPlatform);
                     }
                     else
                     {
-                        concatenateTestedPlatforms.Append(testedPlatform).Append("+");
+                        concatenatedTestedPlatforms.Append(testedPlatform).Append("+");
                     }
                 }
 
@@ -568,7 +717,7 @@ namespace Coder_s_Footprint.Controllers
                 modelLogDB.TestedAt = testedAt.ToString("dd/MM/yyyy HH:mm");
                 modelLogDB.Email = email;
 
-                AddToCodersFootprintLogDB(modelLogDB.TestedAt, modelLogDB.Email, concatenateTestedPlatforms.ToString(), modelLogDB.TotalPoints);
+                AddToCodersFootprintLogDB(modelLogDB.TestedAt, modelLogDB.Email, concatenatedTestedPlatforms.ToString(), modelLogDB.TotalPoints);
 
                 ListOfPoints.Clear();
                 ListOfPlatformsTested.Clear();

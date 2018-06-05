@@ -56,9 +56,11 @@ namespace Coder_s_Footprint.Controllers
             }
             else
             {
-                PlatformsController.CalculateTotalPoints(true, user_email, "GitHub", PlatformsController.GetPoints(true, 1));
-
                 List<GitHubAPIUserRepository> gitHubAPIUserRepositoriesCollection = GetUserRepositories(username);
+
+                var total_points = PlatformsController.GetPoints(true, 1);
+
+                var extra_points = 0;
 
                 int total_number_of_repositories = gitHubAPIUserRepositoriesCollection.Count;
 
@@ -68,6 +70,32 @@ namespace Coder_s_Footprint.Controllers
 
                 int organizations = GetOrganizations(username);
 
+                if(total_number_of_repositories > 0)
+                {
+                    extra_points = PlatformsController.GetPoints(true, 11);
+                    total_points += extra_points;
+                }
+
+                if(followers > 0)
+                {
+                    extra_points = PlatformsController.GetPoints(true, 12);
+                    total_points += extra_points;
+                }
+
+                if(subscriptions > 0)
+                {
+                    extra_points = PlatformsController.GetPoints(true, 13);
+                    total_points += extra_points;
+                }
+
+                if(organizations > 0)
+                {
+                    extra_points = PlatformsController.GetPoints(true, 14);
+                    total_points += extra_points;
+                }
+
+                PlatformsController.CalculateTotalPoints(true, user_email, "GitHub", total_points);
+
                 GitHubAPIUserProfile gitHubAPIUserProfile = new GitHubAPIUserProfile
                 {
                     Username = username,
@@ -76,6 +104,7 @@ namespace Coder_s_Footprint.Controllers
                     Subscriptions = subscriptions,
                     TotalRepositories = total_number_of_repositories,
                     Repositories = gitHubAPIUserRepositoriesCollection,
+                    Total_Points = total_points,
                     Tested_At = TestedAt.ToString("dd/MM/yyyy HH:mm")
                 };
 

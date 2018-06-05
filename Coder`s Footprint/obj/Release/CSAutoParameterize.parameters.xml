@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="DB-Web.config Connection String" description="DB Connection String used in web.config by the application to access the database." defaultValue="Server=436889f6-579d-49e1-8e6b-a8b8011be85c.sqlserver.sequelizer.com;Database=db436889f6579d49e18e6ba8b8011be85c;User ID=kykkashvgiukgcly;Password=VneNmsv5VdtjkvYp4qVJMdyJkzbc2MKmzvdStZfgKBK6whN2BFC7tZtRWCCTrsci;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="E:\\Licenta\ NoCoding\ 2018\\Coder's\ Footprint\ API\ Azure\ Git\ Repo\\Coder`s\ Footprint\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DB']/@connectionString" />
+  </parameter>
+</parameters>
