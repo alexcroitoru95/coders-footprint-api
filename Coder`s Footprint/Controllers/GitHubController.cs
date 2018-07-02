@@ -7,13 +7,25 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Newtonsoft.Json.Linq;
+using System.Text;
+using System.Globalization;
+using System.Linq;
 
 namespace Coder_s_Footprint.Controllers
 {
     [Authorize]
     [RoutePrefix("api/GitHub")]
-    public class GitHubAPIController : ApiController
+    public class GitHubController : ApiController
     {
+        public static string locationGitHub;
+        public static string usernameGitHub;
+
+        static GitHubController()
+        {
+            locationGitHub = String.Empty;
+            usernameGitHub = String.Empty;
+        }
+
         [AcceptVerbs("POST")]
         [Route("GetUserProfile/")]
         public GitHubAPIUserProfile GetUserProfile([FromBody] EmailRequestModel emailRequest)
@@ -36,6 +48,9 @@ namespace Coder_s_Footprint.Controllers
             {
                 username = "none";
 
+                usernameGitHub = String.Empty;
+                locationGitHub = String.Empty;
+
                 PlatformsController.CalculateTotalPoints(false, user_email, "GitHub", PlatformsController.GetPoints(false, 1));
 
                 List<GitHubAPIUserRepository> gitHubAPINoUserRepositories = new List<GitHubAPIUserRepository>();
@@ -49,6 +64,8 @@ namespace Coder_s_Footprint.Controllers
                     Subscriptions = 0,
                     TotalRepositories = 0,
                     Repositories = gitHubAPINoUserRepositories,
+                    Location = "",
+                    Total_Points = 0,
                     Tested_At = TestedAt.ToString("dd/MM/yyyy HH:mm")
                 };
 
@@ -64,11 +81,15 @@ namespace Coder_s_Footprint.Controllers
 
                 int total_number_of_repositories = gitHubAPIUserRepositoriesCollection.Count;
 
+                usernameGitHub = username;
+
                 int followers = GetFollowers(username);
 
                 int subscriptions = GetSubscriptions(username);
 
                 int organizations = GetOrganizations(username);
+
+                string location = GetLocation(username);
 
                 if(total_number_of_repositories > 0)
                 {
@@ -96,6 +117,8 @@ namespace Coder_s_Footprint.Controllers
 
                 PlatformsController.CalculateTotalPoints(true, user_email, "GitHub", total_points);
 
+                locationGitHub = RemoveDiacritics(location);
+
                 GitHubAPIUserProfile gitHubAPIUserProfile = new GitHubAPIUserProfile
                 {
                     Username = username,
@@ -104,6 +127,7 @@ namespace Coder_s_Footprint.Controllers
                     Subscriptions = subscriptions,
                     TotalRepositories = total_number_of_repositories,
                     Repositories = gitHubAPIUserRepositoriesCollection,
+                    Location = location,
                     Total_Points = total_points,
                     Tested_At = TestedAt.ToString("dd/MM/yyyy HH:mm")
                 };
@@ -291,6 +315,44 @@ namespace Coder_s_Footprint.Controllers
             }
 
             return total_number_of_subscriptions;
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public static string GetLocation(string username)
+        {
+            GitHubAPIRequestModel gitHubAPIRequestModel = new GitHubAPIRequestModel();
+
+            string cUrl = gitHubAPIRequestModel.cUrlGetLocation + username + "?client_id=" + gitHubAPIRequestModel.OAuthApplicationClient_Id + "&client_secret=" + gitHubAPIRequestModel.OAuthApplicationClient_Secret;
+
+            string location = String.Empty;
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(cUrl);
+            request.Accept = "application/vnd.github.v3+json";
+            request.UserAgent = "Coder's Footprint";
+
+            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            using (Stream stream = response.GetResponseStream())
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                JToken json_response_object = JObject.Parse(reader.ReadToEnd());
+               
+                location = (string)json_response_object["location"];
+            }
+
+            return location;
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        private static string RemoveDiacritics(string text)
+        {
+            if (null == text) return null;
+            var chars = text
+                .Normalize(NormalizationForm.FormD)
+                .ToCharArray()
+                .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                .ToArray();
+
+            return new string(chars).Normalize(NormalizationForm.FormC);
         }
     }
 }

@@ -25,6 +25,12 @@ namespace Coder_s_Footprint.Models
         public string Email { get; set; }
     }
 
+    public class StackOverflowUserIdRequestModel
+    {
+        public int UserId { get; set; }
+        public string Email { get; set; }
+    }
+
     public class EmailRequestCode
     {
         public EmailRequestCode()
@@ -70,6 +76,8 @@ namespace Coder_s_Footprint.Models
     {
         public string Email { get; set; }
         public string TestedAt { get; set; }
+        public string Location { get; set; }
+        public string Username { get; set; }
         public int TotalPoints { get; set; }
     }
 
@@ -80,8 +88,10 @@ namespace Coder_s_Footprint.Models
         public string cUrlGetFollowers = "https://api.github.com/users/";
         public string cUrlGetOrganizations = "https://api.github.com/users/";
         public string cUrlGetSubscriptions = "https://api.github.com/users/";
+        public string cUrlGetLocation = "https://api.github.com/users/";
         public string OAuthApplicationClient_Id = "ba7cd06f283f82df0bde";
         public string OAuthApplicationClient_Secret = "dbe777200c04b36a17a885a2e8961af359a1bcb1";
+        public string GitHubInitialLocation = "";
     }
 
     public class StackExchangeAPIRequestModel
@@ -90,6 +100,8 @@ namespace Coder_s_Footprint.Models
         public string cUrlGetQuestions = "https://api.stackexchange.com/2.2/users/";
         public string cUrlGetAnswers = "https://api.stackexchange.com/2.2/users/";
         public string cUrlGetComments = "https://api.stackexchange.com/2.2/users/";
+        public string cUrlGetLocation = "https://api.stackexchange.com/2.2/users/";
+        public string cUrlGetNameBySearchingId = "https://api.stackexchange.com/2.2/users/";
     }
 
         public class GitHubAPIUserRepository
@@ -106,6 +118,7 @@ namespace Coder_s_Footprint.Models
         public int Subscriptions { get; set; }
         public int TotalRepositories { get; set; }
         public List<GitHubAPIUserRepository> Repositories { get; set; }
+        public string Location { get; set; }
         public int Total_Points { get; set; }
         public string Tested_At { get; set; }
     }
@@ -113,11 +126,21 @@ namespace Coder_s_Footprint.Models
     public class StackExchangeAPIUserProfile
     {
         public string DisplayName { get; set; }
+        public bool MultipleUsersWithSameName { get; set; }
         public int UserId { get; set; }
         public int Questions { get; set; }
         public int Answers { get; set; }
         public int Comments { get; set; }
+        public string Location { get; set; }
         public int Total_Points { get; set; }
         public string Tested_At { get; set; }
+    }
+
+    public class StackExchangeAPIUsersWithSameName
+    {
+        public int UserId { get; set; }
+        public string Location { get; set; }
+        public string ProfileImage { get; set; }
+        public string DisplayName { get; set; }
     }
 }

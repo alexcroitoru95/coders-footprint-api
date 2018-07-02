@@ -24,12 +24,14 @@ namespace Coder_s_Footprint.Controllers
     {
         private static List<int> ListOfPoints;
         private static List<string> ListOfPlatformsTested;
+        private static List<string> ListOfHasAccountOnPlatform;
         private static Random random = new Random();
 
         static PlatformsController()
         {
             ListOfPoints = new List<int>();
             ListOfPlatformsTested = new List<string>();
+            ListOfHasAccountOnPlatform = new List<string>();
         }
 
         [AcceptVerbs("POST")]
@@ -685,11 +687,20 @@ namespace Coder_s_Footprint.Controllers
         {
             ModelLogDatabase modelLogDB = new ModelLogDatabase();
             StringBuilder concatenatedTestedPlatforms = new StringBuilder();
+            StringBuilder concatenatedHasAccountOnPlatform = new StringBuilder();
             DateTime testedAt = DateTime.Now;
+
+            string locationGitHub = String.Empty, locationStackOverflow = String.Empty, usernameGitHub = String.Empty, displayNameStackOverflow = String.Empty;
+            modelLogDB.Location = String.Empty;
+            modelLogDB.Username = String.Empty;
 
             if (hasAccount == false)
             {
                points = 0;
+            }
+            else
+            {
+                ListOfHasAccountOnPlatform.Add(testedPlatformName);
             }
 
             ListOfPoints.Add(points);
@@ -709,29 +720,59 @@ namespace Coder_s_Footprint.Controllers
                     }
                 }
 
-                foreach(int currentScore in ListOfPoints)
+                foreach (string hasAccountOnPlatform in ListOfHasAccountOnPlatform)
+                {
+                    concatenatedHasAccountOnPlatform.Append(hasAccountOnPlatform).Append(";");
+                }
+
+                foreach (int currentScore in ListOfPoints)
                 {
                     modelLogDB.TotalPoints += currentScore;
+                }
+
+                locationGitHub = GitHubController.locationGitHub;
+                locationStackOverflow = StackOverflowController.locationStackOverflow;
+
+                usernameGitHub = GitHubController.usernameGitHub;
+                displayNameStackOverflow = StackOverflowController.displayNameStackOverflow;
+
+                if(locationGitHub != String.Empty)
+                {
+                    modelLogDB.Location = locationGitHub;
+                }
+                else
+                {
+                    modelLogDB.Location = locationStackOverflow;
+                }
+
+                if(usernameGitHub != String.Empty)
+                {
+                    modelLogDB.Username = usernameGitHub;
+                }
+                else
+                {
+                    modelLogDB.Username = displayNameStackOverflow;
                 }
 
                 modelLogDB.TestedAt = testedAt.ToString("dd/MM/yyyy HH:mm");
                 modelLogDB.Email = email;
 
-                AddToCodersFootprintLogDB(modelLogDB.TestedAt, modelLogDB.Email, concatenatedTestedPlatforms.ToString(), modelLogDB.TotalPoints);
+                AddToCodersFootprintLogDB(modelLogDB.TestedAt, modelLogDB.Email, modelLogDB.Username, concatenatedTestedPlatforms.ToString(), concatenatedHasAccountOnPlatform.ToString(), modelLogDB.Location, modelLogDB.TotalPoints);
 
                 ListOfPoints.Clear();
                 ListOfPlatformsTested.Clear();
+                ListOfHasAccountOnPlatform.Clear();
             }
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        private static void AddToCodersFootprintLogDB(string testedAt, string email, string platformsTested, int totalPoints)
+        private static void AddToCodersFootprintLogDB(string testedAt, string email, string username, string platformsTested, string hasAccountOnPlatform, string location, int totalPoints)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["DB"].ConnectionString.ToString();
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                SqlCommand command = new SqlCommand("INSERT INTO dbo.Log([Tested At], [E-mail], [Platforms Tested], [Total Points]) VALUES(@testedAt,@email,@platformsTested,@totalPoints);")
+                SqlCommand command = new SqlCommand("INSERT INTO dbo.Log([Tested At], [E-mail], [Username], [Platforms Tested], [Has Account], [Location], [Total Points]) VALUES(@testedAt,@email,@username,@platformsTested,@hasAccountOnPlatform,@location,@totalPoints);")
                 {
                     Connection = connection
                 };
@@ -739,6 +780,9 @@ namespace Coder_s_Footprint.Controllers
                 command.Parameters.AddWithValue("@testedAt", testedAt);
                 command.Parameters.AddWithValue("@email", email);
                 command.Parameters.AddWithValue("@platformsTested", platformsTested);
+                command.Parameters.AddWithValue("@hasAccountOnPlatform", hasAccountOnPlatform);
+                command.Parameters.AddWithValue("@location", location);
+                command.Parameters.AddWithValue("@username", username);
                 command.Parameters.AddWithValue("@totalPoints", totalPoints);
 
                 connection.Open();
